@@ -39,7 +39,8 @@ search = 'codelst-{current_version}'
 
 [[before_commit]]
 name = "create local version"
-cmd = "mkdir ../codelst-{new_version}; cp ./* ../codelst-{new_version}"
+#cmd = "mkdir ../codelst-{new_version}; cp ./* ../codelst-{new_version}"
+cmd = "ln -s ../codelst ../codelst-{new_version}"
 [[before_commit]]
 name = "compile manual"
 cmd = "typst compile manual.typ"
