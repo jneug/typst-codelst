@@ -158,8 +158,8 @@
 	])
 }
 
-#let sourcefile( file, lang: none, ..args ) = {
-	if lang == none {
+#let sourcefile( file, lang: auto, ..args ) = {
+	if lang == auto {
 		let m = file.match(regex("\.([a-z0-9]+)$"))
 		if m != none {
 			lang = m.captures.first()
