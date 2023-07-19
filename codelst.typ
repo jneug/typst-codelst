@@ -51,7 +51,7 @@
 	}
 	assert.ne(code, none, message: "Missing raw content.")
 
-	code-lang  = code.lang
+	code-lang  = if code.has("lang") { code.lang } else { "plain" }
 	code-lines = code.text.split("\n")
 	// Reduce lines to range
 	if showrange != none {
