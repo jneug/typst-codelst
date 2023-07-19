@@ -19,18 +19,12 @@
 	return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
 
-#let numbers-style( i ) = align(right, text(
-	fill: luma(160),
-	size: .8em,
-	i
-))
-
 #let sourcecode(
 	line-numbers: true,
 	numbers-format: "1",
 	numbers-start: auto,
 	numbers-side: left,
-	numbers-style: (i) => i.counter.display((no, ..args) => raw(str(no))),
+	numbers-style: (i) => i, // (i) => i.counter.display((no, ..args) => raw(str(no))),
 
 	gutter: 10pt,
 
@@ -180,6 +174,12 @@
 	assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
 	[#supplement #__c_lineno.at(lines.first().location()).first()]
 })
+
+#let numbers-style( i ) = align(right, text(
+	fill: luma(160),
+	size: .8em,
+	i
+))
 
 #let code-frame(
 	fill:      luma(250),
