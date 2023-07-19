@@ -117,9 +117,9 @@
 
 		i = str(i)
 		if i in labels {
-			grid-cont.push([#raw(lang:code-lang, block:false, line)#label(labels.at(i))])
+			grid-cont.push([#raw(lang:code-lang, block:true, line)#label(labels.at(i))])
 		} else {
-			grid-cont.push(raw(lang:code-lang, block:false, line))
+			grid-cont.push(raw(lang:code-lang, block:true, line))
 		}
 
 		if line-numbers and numbers-side == right {
