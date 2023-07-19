@@ -25,6 +25,9 @@ search = 'version = "{current_version}"'
 
 [[file]]
 src = "README.md"
+search = "codelst ({current_version})"
+[[file]]
+src = "README.md"
 search = "codelst:{current_version}"
 
 [[file]]

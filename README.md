@@ -1,10 +1,10 @@
-# codelst (v0.0.1)
+# codelst (v0.0.2)
 
 **codelst** is a [Typst](https://github.com/typst/typst) package for rendering sourcecode with line numbers and some other additions.
 
 ## Usage
 
-For Typst 0.6.0 or later simply import the package from the typst preview repository:
+For Typst 0.6.0 or later import the package from the typst preview repository:
 
 ```typst
 #import "@preview/codelst:0.0.2": sourcecode
