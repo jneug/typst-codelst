@@ -7,7 +7,7 @@
 For Typst 0.6.0 or later simply import the package from the typst preview repository:
 
 ```typst
-#import "@preview/codelst:0.0.1": sourcecode
+#import "@preview/codelst:0.0.2": sourcecode
 ```
 
 For Typst before 0.6.0 or to use **codelst** as a local module, download the package files into your project folder and import `codelst.typ`:
@@ -19,7 +19,7 @@ For Typst before 0.6.0 or to use **codelst** as a local module, download the pac
 After importing the package, simple wrap any fenced code block in a call to `#sourcecode()`:
 
 ````typst
-#import "@preview/codelst:0.0.1": sourcecode
+#import "@preview/codelst:0.0.2": sourcecode
 
 #sourcecode[```typc
 #show "ArtosFlow": name => box[
