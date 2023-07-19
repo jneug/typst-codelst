@@ -36,5 +36,25 @@ project of the Artos Institute.
 ```]
 ````
 
-See `example.typ` for usage examples.
+## Further documentation
 
+See `manual.pdf` for a comprehensive manual of the package. 
+
+See `example.typ` for some quick usage examples.
+
+## Development
+
+The documentation is created using [Mantys](https://github.com/jneug/typst-mantys), a Typst template for creating package documentation.
+
+To compile the manual Mantys needs to be available as a local package. Refer to Mantys' manual for instructions how to do so.
+
+## Changelog
+
+### v0.0.2
+
+- Added a comprehensive manual.
+- Fixed crash for missing `lang` attribute in `raw` element.
+
+### v0.0.1
+
+- Initial version submitted to typst/packages.
