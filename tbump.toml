@@ -25,3 +25,14 @@ search = 'version = "{current_version}"'
 
 [[file]]
 src = "README.md"
+
+[[file]]
+src = "manual.typ"
+
+[[before_commit]]
+name = "compile manual"
+cmd = "typst compile manual.typ"
+
+[[before_commit]]
+name = "compile examples"
+cmd = "typst compile examples.typ"
