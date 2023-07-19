@@ -25,17 +25,11 @@ search = 'version = "{current_version}"'
 
 [[file]]
 src = "README.md"
-<<<<<<< HEAD
 search = "codelst:{current_version}"
 
 [[file]]
 src = "manual.typ"
 search = ['version: "{current_version}"', 'codelst-{current_version}', 'codelst:{current_version}']
-=======
-
-[[file]]
-src = "manual.typ"
->>>>>>> 94b9a46387e484a2cff92ac37054fc557902673f
 
 [[before_commit]]
 name = "compile manual"
