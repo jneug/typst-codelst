@@ -55,12 +55,13 @@
 	// Reduce lines to range
 	if showrange != none {
 		assert.eq(showrange.len(), 2)
-		code-lines = code-lines.slice(
-			calc.min(line-count, showrange.first() - 1),
-			calc.min(line-count, showrange.last())
+		showrange = (
+			calc.clamp(calc.min(..showrange), 1, line-count) - 1,
+			calc.clamp(calc.max(..showrange), 1, line-count)
 		)
+		code-lines = code-lines.slice(..showrange)
 		if numbers-start == auto {
-			numbers-start = showrange.first()
+			numbers-start = showrange.first() + 1
 		}
 	}
 	// Trim blank lines at start and finish
