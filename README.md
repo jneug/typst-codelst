@@ -1,4 +1,4 @@
-# codelst (v0.0.2)
+# codelst (v0.0.3)
 
 **codelst** is a [Typst](https://github.com/typst/typst) package for rendering sourcecode with line numbers and some other additions.
 
@@ -7,7 +7,7 @@
 For Typst 0.6.0 or later import the package from the typst preview repository:
 
 ```js
-#import "@preview/codelst:0.0.2": sourcecode
+#import "@preview/codelst:0.0.3": sourcecode
 ```
 
 For Typst before 0.6.0 or to use **codelst** as a local module, download the package files into your project folder and import `codelst.typ`:
@@ -19,7 +19,7 @@ For Typst before 0.6.0 or to use **codelst** as a local module, download the pac
 After importing the package, simple wrap any fenced code block in a call to `#sourcecode()`:
 
 ````js
-#import "@preview/codelst:0.0.2": sourcecode
+#import "@preview/codelst:0.0.3": sourcecode
 
 #sourcecode[```typ
 #show "ArtosFlow": name => box[
@@ -56,7 +56,7 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 - Added `continue-numbering` argument to `#sourcecode()`.
 - Fixed problem with `showrange` having out of range line numbers.
 
-### v0.0.2
+### v0.0.3
 
 - Added a comprehensive manual.
 - Fixed crash for missing `lang` attribute in `raw` element.

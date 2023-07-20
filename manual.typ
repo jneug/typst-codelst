@@ -6,12 +6,12 @@
     subtitle:   [A *Typst* package to render source code],
     authors:    "Jonas Neugebauer",
     url:        "https://github.com/jneug/typst-codelst",
-    version:    "0.0.2",
+    version:    "0.0.3",
     date:       "2023-07-19",
     abstract:   [
         #pkg[codelst] is a *Typst* package inspired by LaTeX package like #pkg[listings]. It adds functionality to render source code with line numbers, highlighted lines and more.
     ],
-    example-imports: ("@local/codelst:0.0.2": "*")
+    example-imports: ("@local/codelst:0.0.3": "*")
 )
 
 #import "codelst.typ"
@@ -34,7 +34,7 @@ Since I used LaTeX before, I got inspired by packages like #footlink("https://ct
 For Typst 0.6.0 and later CODELST can be imported from the preview repository:
 
 #sourcecode(linenos: false)[```typ
-#import "@preview/codelst:0.0.2": sourcecode
+#import "@preview/codelst:0.0.3": sourcecode
 ```]
 
 Alternatively, the package can be downloaded and saved into the system dependent local package repository.
@@ -43,15 +43,15 @@ Either download the current release from GitHub#footnote[#link("https://github.c
 
 #sourcecode(linenos: false)[
 ```shell-unix-generic
-git clone https://github.com/jneug/typst-codelst.git codelst-0.0.2
+git clone https://github.com/jneug/typst-codelst.git codelst-0.0.3
 ```]
 
-In either case, make sure the files are placed in a folder with the correct version number: `codelst-0.0.2`
+In either case, make sure the files are placed in a folder with the correct version number: `codelst-0.0.3`
 
 After installing the package, just import it inside your `typ` file:
 
 #sourcecode(linenos: false)[```typ
-#import "@local/codelst:0.0.2": sourcecode
+#import "@local/codelst:0.0.3": sourcecode
 ```]
 
 == Use as a module
@@ -267,7 +267,7 @@ Though CODELST does not impose some default formatting by default, it provides t
 ```)
 #ibox[Remember to import the commands first:
 ```typ
-#import "@preview/codelst:0.0.2": sourcecode, number-style, code-frame
+#import "@preview/codelst:0.0.3": sourcecode, number-style, code-frame
 ```]
 
 If #cmd-[sourcecode] is used inside #cmd[figure], it is recommended to also allow page breaks for that kind of figure:
