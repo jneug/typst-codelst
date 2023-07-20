@@ -25,6 +25,7 @@
 	numbers-start: auto,
 	numbers-side: left,
 	numbers-style: (i) => i, // (i) => i.counter.display((no, ..args) => raw(str(no))),
+	continue-numbering: false,
 
 	gutter: 10pt,
 
@@ -41,22 +42,23 @@
 
 	code
 ) = {
-	let line-count = 0
-	let code-lang = none
-	let code-lines = ()
-
 	// Find first raw element in body
 	if code.func() != raw {
 		code = code.children.find((c) => c.func() == raw)
 	}
 	assert.ne(code, none, message: "Missing raw content.")
 
-	code-lang  = if code.has("lang") { code.lang } else { "plain" }
-	code-lines = code.text.split("\n")
+	let code-lang  = if code.has("lang") { code.lang } else { "plain" }
+	let code-lines = code.text.split("\n")
+	let line-count = code-lines.len()
+
 	// Reduce lines to range
 	if showrange != none {
 		assert.eq(showrange.len(), 2)
-		code-lines = code-lines.slice(showrange.first() - 1, showrange.last())
+		code-lines = code-lines.slice(
+			calc.min(line-count, showrange.first() - 1),
+			calc.min(line-count, showrange.last())
+		)
 		if numbers-start == auto {
 			numbers-start = showrange.first()
 		}
@@ -134,7 +136,7 @@
 		#show <lineno>: numbers-style
 		#set align(left)
 		#set par(justify:false)
-		#__c_lineno.update(numbers-start - 1)
+		#if not continue-numbering { __c_lineno.update(numbers-start - 1) }
 
 		#let ins = 0.3em
 		#let lines-width = measure(raw(str(line-count)), styles).width + 2*ins
