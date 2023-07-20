@@ -25,7 +25,7 @@ search = 'version = "{current_version}"'
 
 [[file]]
 src = "README.md"
-search = "codelst ({current_version})"
+search = "(v{current_version})"
 [[file]]
 src = "README.md"
 search = "codelst:{current_version}"
@@ -43,7 +43,7 @@ search = 'codelst-{current_version}'
 [[before_commit]]
 name = "create local version"
 #cmd = "mkdir ../codelst-{new_version}; cp ./* ../codelst-{new_version}"
-cmd = "ln -s ../codelst ../codelst-{new_version}"
+cmd = "ln -s codelst ../codelst-{new_version}"
 [[before_commit]]
 name = "compile manual"
 cmd = "typst compile manual.typ"
