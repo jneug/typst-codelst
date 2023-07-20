@@ -50,6 +50,10 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 
 ## Changelog
 
+### v0.0.3
+
+- Removed call to `#read()` from `#sourcefile()`.
+
 ### v0.0.2
 
 - Added a comprehensive manual.

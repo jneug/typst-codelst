@@ -158,15 +158,16 @@
 	])
 }
 
-#let sourcefile( file, lang: auto, ..args ) = {
-	if lang == auto {
+#let sourcefile( code, file:none, lang:auto, ..args ) = {
+	if file != none and lang == auto {
 		let m = file.match(regex("\.([a-z0-9]+)$"))
 		if m != none {
 			lang = m.captures.first()
 		}
+	} else if lang == "auto" {
+		lang = "plain"
 	}
-	let _code = read(file)
-	sourcecode( ..args, raw(_code, lang:lang, block:true))
+	sourcecode( ..args, raw(code, lang:lang, block:true))
 }
 
 #let lineref( label, supplement:"line" ) = locate(loc => {
