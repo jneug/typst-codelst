@@ -1,4 +1,4 @@
-#import "@local/mantys:0.0.1": *
+#import "@local/mantys:0.0.2": *
 
 #show: mantys.with(
     name:       "codelst",
@@ -33,7 +33,7 @@ Since I used LaTeX before, I got inspired by packages like #footlink("https://ct
 
 For Typst 0.6.0 and later CODELST can be imported from the preview repository:
 
-#sourcecode(linenos: false)[```typc
+#sourcecode(linenos: false)[```typ
 #import "@preview/codelst:0.0.2": sourcecode
 ```]
 
@@ -50,7 +50,7 @@ In either case, make sure the files are placed in a folder with the correct vers
 
 After installing the package, just import it inside your `typ` file:
 
-#sourcecode(linenos: false)[```typc
+#sourcecode(linenos: false)[```typ
 #import "@local/codelst:0.0.2": sourcecode
 ```]
 
@@ -59,7 +59,7 @@ After installing the package, just import it inside your `typ` file:
 To use CODELST as a module for one project, get the file `codelst.typ` from the repository and save it in your project folder.
 
 Import the module as usual:
-#sourcecode(linenos: false)[```typc
+#sourcecode(linenos: false)[```typ
 #import "codelst.typ": sourcecode
 ```]
 
@@ -67,7 +67,7 @@ Import the module as usual:
 
 CODELST adds the #cmd[sourcecode] command with various options to render code blocks. It wraps around any #cmd-[raw] block to add some functionality and formatting options to it:
 
-#example(raw("#sourcecode[```typc
+#example(raw("#sourcecode[```typ
 #show \"ArtosFlow\": name => box[
   #box(image(
     \"logo.svg\",
@@ -90,7 +90,7 @@ Line numbers can be formatted in different ways:
     numbers-format: \"I\",
     numbers-start: 10,
     numbers-style: (i) => align(right, text(fill:blue, emph(i))),
-)[```typc
+)[```typ
 #show \"ArtosFlow\": name => box[
   #box(image(
     \"logo.svg\",
@@ -108,7 +108,7 @@ It is common to highlight code blocks by putting them inside a #cmd-[block] elem
 
 #example(raw("#show <codelst>: (code) => block(fill:luma(245), stroke:1pt+luma(120), radius: 4pt, inset:(x:10pt, y: 5pt), code)
 
-#sourcecode[```typc
+#sourcecode[```typ
 #show \"ArtosFlow\": name => box[
   #box(image(
     \"logo.svg\",
@@ -126,7 +126,7 @@ Line numbers can be formatted globally in a similar way:
 
 #example(raw("#show <lineno>: (no) => no.counter.display((n, ..args) => text(fill:luma(120), size:10pt, emph(str(n)) + sym.arrow.r))
 
-#sourcecode(gutter:2em)[```typc
+#sourcecode(gutter:2em)[```typ
 #show \"ArtosFlow\": name => box[
   #box(image(
     \"logo.svg\",
@@ -194,23 +194,39 @@ This behavior can be disabled or modified:
 
 ```]]
 
-To load ans show code from a file, use #cmd[sourcefile]:
+To show code from a file load it with #cmd[read] and pass the result to #cmd[sourcefile]:
 
-#example(raw("#sourcefile(\"typst.toml\")"))
+#example(raw("#sourcefile(read(\"typst.toml\"), lang:\"toml\")"))[
+	#codelst.sourcefile(read("typst.toml"), lang:"toml")
+]
 
 #cmd-[sourcefile] takes the same arguments as #cmd-[sourcecode]. For example, to limit the output to a range of lines:
 
 #example(raw("#sourcefile(
     showrange: (2, 4),
-    \"typst.toml\"
-)"))
+    read(\"typst.toml\"),
+	lang:\"toml\"
+)"))[
+#codelst.sourcefile(
+    showrange: (2, 4),
+    read("typst.toml"),
+	lang:"toml"
+)
+]
 
 Specific lines can be highlighted:
 
 #example(raw("#sourcefile(
     highlighted: (2, 3, 4),
-    \"typst.toml\"
-)"))
+    read(\"typst.toml\"),
+	lang:\"toml\"
+)"))[
+#codelst.sourcefile(
+    highlighted: (2, 3, 4),
+    read("typst.toml"),
+	lang:"toml",
+)
+]
 
 To reference a line from other parts of the document, CODELST looks for labels in the source code and makes them available to Typst. The regex to look for labels can be modified to accommodate different syntaxes:
 
@@ -218,43 +234,54 @@ To reference a line from other parts of the document, CODELST looks for labels i
     label-regex: regex(\"\\\"(codelst.typ)\\\"\"),
     highlight-labels: true,
     highlight-color: lime,
-    \"typst.toml\"
+    read(\"typst.toml\"),
+	lang:\"toml\"
 )
 
-See #lineref(<codelst.typ>) for the _entrypoint_."))
+See #lineref(<codelst.typ>) for the _entrypoint_."))[
+#codelst.sourcefile(
+    label-regex: regex("(codelst.typ)"),
+    highlight-labels: true,
+    highlight-color: lime,
+    read("typst.toml"),
+	lang:"toml"
+)
+
+See #codelst.lineref(<codelst.typ>) for the _entrypoint_.
+]
 
 == Formatting
 
 As shown above, source code and line numbers can be formatted using #var-[show] rules.
 
-#sourcecode(```typc
+#sourcecode(```typ
 #show <lineno>: (i) => i.counter.display("I")
 #show <codelst>: (code) => block(fill:luma(245), code)
 ```)
 
 Though CODELST does not impose some default formatting by default, it provides the two commands #cmd[number-style] and #cmd[code-frame] to quickly apply some styling to source code:
 
-#sourcecode(```typc
+#sourcecode(```typ
 #show <lineno>: number-style
 #show <codelst>: code-frame
 ```)
 #ibox[Remember to import the commands first:
-```typc
+```typ
 #import "@preview/codelst:0.0.2": sourcecode, number-style, code-frame
 ```]
 
 If #cmd-[sourcecode] is used inside #cmd[figure], it is recommended to also allow page breaks for that kind of figure:
-#sourcecode[```typc
+#sourcecode[```typ
 #show figure.where(kind: raw): set block(breakable: true)
 ```]
 
 To quickly apply these styles to a document, the #cmd[codelst-styles] command is provided as a shortcut:
-#sourcecode(```typc
+#sourcecode(```typ
 #show: codelst-styles
 ```)
 
 Instead of the build in styles, custom functions can be used:
-#example(```typc
+#example(```typ
 #show <lineno>: (i) => i.counter.display(
     (n, ..args) => text(
         fill:rgb(220, 65, 241),
@@ -282,6 +309,7 @@ Note that the style function for line numbers receives the result of a call to #
     numbers-start: auto,
     numbers-side: left,
     numbers-style: (i) => i.counter.display((no, ..args) => raw(str(no))),
+	continue-numbering: false,
     gutter: 10pt,
     tab-indent: 4,
     gobble: auto,
@@ -308,6 +336,20 @@ Note that the style function for line numbers receives the result of a call to #
     #argument("numbers-style", default:"(i) => i", type:"function")[
         A function of one argument to format the line numbers. Should return #dtype[content].
     ]
+	#argument("continue-numbering", default:false)[
+		If set to #value(true), the line numbers will continue from the last call of #cmd-[sourcecode].
+
+		#example(raw("#sourcecode[```
+one
+two
+```]
+#lorem(10)
+#sourcecode(continue-numbering: true)[```
+three
+four
+```]
+"))
+	]
     #argument("gutter", default:10pt)[
         Gutter between line numbers and code lines.
     ]
@@ -328,7 +370,7 @@ Note that the style function for line numbers receives the result of a call to #
     #argument("label-regex", type:"regular expression")[
         A #dtype("regular expression") for matching labels in the source code. The default value will match labels with at least three characters at the end of lines, separated with a line comment (`//`). For example:
 
-        ```typc
+        ```typ
         #strong[Some text] // <my-line-label>
         ```
 
@@ -358,7 +400,9 @@ Note that the style function for line numbers receives the result of a call to #
 #command("sourcefile", arg[filename], arg(lang: auto), sarg[args])[
     Loads the text content from the file #arg[filename] and passes it to #cmd-[sourcecode] for display. If #arg(lang: auto), the code language is guessed by the file's extension. Any other #arg[args] will be passed to #cmd-[sourcecode].
 
-    #example(raw("#sourcefile(\"typst.toml\")"))
+    #example(raw("#sourcefile(read(\"typst.toml\"), lang:\"toml\")"))[
+		#codelst.sourcefile(read("typst.toml"), lang:"toml")
+	]
 ]
 
 #command("lineref", arg[label], arg(supplement: "line"))[
@@ -398,7 +442,7 @@ Note that the style function for line numbers receives the result of a call to #
 #command("numbers-style", arg[no])[
     Applies the default CODELST style for line numbers. Can be used in a #var-[show] rule or as a value to #arg[numbers-style].
 
-    #example[```typc
+    #example[```typ
     #for i in range(3,6) [
         - #numbers-style([#i])
     ]
@@ -409,7 +453,7 @@ Note that the style function for line numbers receives the result of a call to #
     Applies the CODELST default styles to the document. Source code will be wrapped in #cmd[code-frame] and numbers styled with #cmd[numbers-style].
 
 
-    #sourcecode[```typc
+    #sourcecode[```typ
     #show: codelst-styles
     ```]
 ]
