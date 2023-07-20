@@ -6,22 +6,22 @@
 
 For Typst 0.6.0 or later import the package from the typst preview repository:
 
-```typst
+```js
 #import "@preview/codelst:0.0.2": sourcecode
 ```
 
 For Typst before 0.6.0 or to use **codelst** as a local module, download the package files into your project folder and import `codelst.typ`:
 
-```typst
+```js
 #import "codelst.typ": sourcecode
 ```
 
 After importing the package, simple wrap any fenced code block in a call to `#sourcecode()`:
 
-````typst
+````js
 #import "@preview/codelst:0.0.2": sourcecode
 
-#sourcecode[```typc
+#sourcecode[```typ
 #show "ArtosFlow": name => box[
   #box(image(
     "logo.svg",
@@ -53,6 +53,8 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 ### v0.0.3
 
 - Removed call to `#read()` from `#sourcefile()`.
+- Added `continue-numbering` argument to `#sourcecode()`.
+- Fixed problem with `showrange` having out of range line numbers.
 
 ### v0.0.2
 
