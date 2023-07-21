@@ -18,6 +18,18 @@
 
 	return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
+#let measure-line-gap(styles) = {
+	let (m1, m2) = (
+		measure(raw("0"), styles),
+		measure(raw("0\n0"), styles)
+	)
+
+	let letter-height = m1.height
+	let descender = 1em - m1.height
+	let line-gap = m2.height - 2*letter-height - descender
+
+	return line-gap
+}
 
 #let sourcecode(
 	line-numbers: true,
@@ -109,56 +121,68 @@
 		}
 	}
 
-	// Create the rows for the grid holding the code
-	let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
+	// Createing the final content
+	style(styles => {
+		// Create the rows for the grid holding the code
+		let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
 
-	let grid-cont = ()
-	for (i, line) in code-lines.enumerate() {
-		if line-numbers and numbers-side == left {
-			grid-cont.push(next-lineno())
-		}
-
-		i = str(i)
-		if i in labels {
-			grid-cont.push([#raw(lang:code-lang, block:true, line)#label(labels.at(i))])
-		} else {
-			grid-cont.push(raw(lang:code-lang, block:true, line))
-		}
-
-		if line-numbers and numbers-side == right {
-			grid-cont.push(next-lineno())
-		}
-	}
-
-	// Add a blank raw element, to allow use in figure
-	raw("", lang:code-lang)
-	// Create content table
-	style(styles => [
-		#show <lineno>: numbers-style
-		#set align(left)
-		#set par(justify:false)
-		#if not continue-numbering { __c_lineno.update(numbers-start - 1) }
-
-		#let ins = 0.3em
-		#let lines-width = measure(raw(str(line-count)), styles).width + 2*ins
-
-		#table(
-			columns: if line-numbers {
-				if numbers-side == left {(lines-width, 1fr)} else {(1fr, lines-width)}
-			} else {
-				1
-			},
-			column-gutter: gutter - 2*ins,
-			//row-gutter: 0.85em,
-			inset: ins,
-			stroke: none,
-			fill: (col, row) => {
-				if row/2 + numbers-start in highlighted { highlight-color } else { none }
-			},
-			..grid-cont
+		let line-gap = measure-line-gap(styles)
+		let next-line( i ) = block(
+			height: 1em,
+			clip: true,
+			spacing: line-gap,
+			move(dy: (1em + line-gap) * -i, code)
 		)
-		<codelst>
-	])
+
+		let grid-cont = ()
+		for (i, line) in code-lines.enumerate() {
+			if line-numbers and numbers-side == left {
+				grid-cont.push(next-lineno())
+			}
+
+			let _i = str(i)
+			if _i in labels {
+				grid-cont.push([#raw(lang:code-lang, block:true, line)#label(labels.at(_i))])
+			} else {
+				// grid-cont.push(raw(lang:code-lang, block:true, line))
+				grid-cont.push(next-line(i))
+			}
+
+			if line-numbers and numbers-side == right {
+				grid-cont.push(next-lineno())
+			}
+		}
+
+		// Add a blank raw element, to allow use in figure
+		raw("", lang:code-lang)
+		// Create content table
+		[
+			#show <lineno>: numbers-style
+			#set align(left)
+			#set par(justify:false)
+			#if not continue-numbering { __c_lineno.update(numbers-start - 1) }
+
+			#let ins = 0.3em
+			#let lines-width = measure(raw(str(line-count)), styles).width + 2*ins
+
+			#table(
+				columns: if line-numbers {
+					if numbers-side == left {(lines-width, 1fr)} else {(1fr, lines-width)}
+				} else {
+					1
+				},
+				column-gutter: gutter - 2*ins,
+				//row-gutter: 0.85em,
+				inset: ins,
+				stroke: none,
+				fill: (col, row) => {
+					if row/2 + numbers-start in highlighted { highlight-color } else { none }
+				},
+				..grid-cont
+			)
+			<codelst>
+		]
+	})
 }
 
 #let sourcefile( code, file:none, lang:auto, ..args ) = {
