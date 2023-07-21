@@ -302,6 +302,26 @@ _source_
 
 Note that the style function for line numbers receives the result of a call to #cmd-[counter.display]. The #doc("meta/counter") can be accessed via the `counter` attribute.
 
+Using other packages like #pkg[showybox] is easy:
+#example(raw("#import \"@preview/showybox:0.2.0\": showybox
+
+#show <codelst>: (code) => showybox(
+    frame: (
+		upper-color: red.darken(40%),
+		lower-color: red.lighten(90%),
+		border-color: black,
+		width: 2pt
+	),
+	title: \"Source code\",
+    code
+)
+
+#sourcecode[```typ
+*some*
+_source_
+= code
+```]"))
+
 == Command overview
 
 #command("sourcecode", ..args(line-numbers: true,
