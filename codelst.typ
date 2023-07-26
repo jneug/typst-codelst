@@ -167,7 +167,7 @@
 		if m != none {
 			lang = m.captures.first()
 		}
-	} else if lang == "auto" {
+	} else if lang == auto {
 		lang = "plain"
 	}
 	sourcecode( ..args, raw(code, lang:lang, block:true))
