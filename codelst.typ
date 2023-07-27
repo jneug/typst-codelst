@@ -111,7 +111,7 @@
 
   // Create final code block
   // (might have changed due to range option and trimming)
-  code = raw(lang:code.lang, code-lines.join("\n"))
+  code = raw(lang:code-lang, code-lines.join("\n"))
 
   // Add a blank raw element, to allow use in figure
   raw("", lang:code-lang)
