@@ -18,18 +18,6 @@
 
 	return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
-#let measure-line-gap(styles) = {
-	let (m1, m2) = (
-		measure(raw("0"), styles),
-		measure(raw("0\n0"), styles)
-	)
-
-	let letter-height = m1.height
-	let descender = 1em - m1.height
-	let line-gap = m2.height - 2*letter-height - descender
-
-	return line-gap
-}
 
 #let sourcecode(
 	line-numbers: true,
@@ -122,27 +110,17 @@
 	}
 
   // Create final code block
+  // (might have changed due to range option and trimming)
   code = raw(lang:code.lang, code-lines.join("\n"))
 
-	// Creating the final content
+  // Add a blank raw element, to allow use in figure
+  raw("", lang:code-lang)
+  // Does this make sense to pass full code to show rules?
+  // block(height:0pt, clip:true, code)
+
+	// Create the final table content
 	layout(size => style(styles => {
-		// Create the rows for the grid holding the code
-		let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
-
-		// let line-gap = measure-line-gap(styles)
-    // let next-line( i ) = {
-    //     let line-m = measure(block(width:size.width, code-lines.at(i)), styles)
-
-    //     block(
-    //       height: line-m.height,
-    //       clip: true,
-    //       // spacing: line-gap,
-    //       spacing: 0pt,
-    //       stroke: .5pt,
-    //       move(dy: (1em + line-gap) * -i, code)
-    //     )
-    // }
-
+    // Measuring font size and line height
     let (m1, m2) = (
       measure(raw("0"), styles),
       measure(raw("0\n0"), styles)
@@ -152,43 +130,48 @@
     let descender = 1em - m1.height
     let line-gap = m2.height - 2*letter-height - descender
 
+    let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
 
-    let line-offset = 0pt
+    // Create the actual content rows
 		let grid-cont = ()
 		for (i, line) in code-lines.enumerate() {
-      let i-str = str(i)
-
+      // Line numbers left side
 			if line-numbers and numbers-side == left {
         grid-cont.push(next-lineno())
 			}
 
-      // Measure actual line height (with potential line breaks)
+      // Measure actual code line height
+      // (including with potential line breaks)
       let m = measure(block(width:size.width, raw(code-lines.at(i))), styles)
+      // Measure offset for moving the code block
       let offset = 0pt
       if i > 0 {
-        offset = measure(block(width:size.width, raw(code-lines.slice(0, count:i).join("\n"))), styles).height + line-gap + descender // descender + 0.8em//+ 0.0874em// + 0.962pt
+        offset = measure(block(width:size.width, raw(code-lines.slice(0, count:i).join("\n"))), styles).height + line-gap + descender
       }
 
+      // the actual code line is created by shifting the
+      // complete code block up and clipping everything
+      // other than the required line.
       let next-line = (block(
-        height: m.height + descender,
+        height: calc.max(m.height, letter-height) + descender,
         width: 100%,
         clip: true,
         spacing: 0pt,
         move(dy: -offset, code)
       ))
-      if i-str in labels {
-        grid-cont.push([#next-line#label(labels.at(i-str))])
+      // Add label to line if present
+      if str(i) in labels {
+        grid-cont.push([#next-line#label(labels.at(str(i)))])
       } else {
         grid-cont.push(next-line)
       }
 
+      // Line numbers right side
       if line-numbers and numbers-side == right {
         grid-cont.push(next-lineno())
 			}
 		}
 
-		// Add a blank raw element, to allow use in figure
-		raw("", lang:code-lang)
 		// Create content table
 		[
 			#show <lineno>: numbers-style
@@ -206,7 +189,6 @@
 					1
 				},
 				column-gutter: gutter - 2*ins,
-				// row-gutter: 0.85em,
         row-gutter: line-gap,
 				inset: 0pt,
 				stroke: none,
