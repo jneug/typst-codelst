@@ -432,6 +432,12 @@ four
 		For this reason, the command differs from #cmd-[sourcecode] only insofar as it accepts a #dtype("string") instead of `raw` #dtype("content").
 
 		Future releases might use the #arg[filename] for other purposes, though.
+
+    To deal with this, simply add the following code to the top of your document:
+
+    ```typ
+    #let srcfile( filename, ..args ) = sourcefile(read(filename), filename:filename, ..args)
+    ```
 	]
 ]
 
