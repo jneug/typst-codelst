@@ -33,7 +33,7 @@ Since I used LaTeX before, I got inspired by packages like #footlink("https://ct
 
 For Typst 0.6.0 and later CODELST can be imported from the preview repository:
 
-#sourcecode(linenos: false)[```typ
+#sourcecode(line-numbers: false)[```typ
 #import "@preview/codelst:0.0.3": sourcecode
 ```]
 
@@ -41,7 +41,7 @@ Alternatively, the package can be downloaded and saved into the system dependent
 
 Either download the current release from GitHub#footnote[#link("https://github.com/jneug/typst-codelst/releases/latest")] and unpack the archive into your system dependent local repository folder#footnote[#link("https://github.com/typst/packages#local-packages")] or clone it directly:
 
-#sourcecode(linenos: false)[
+#sourcecode(line-numbers: false)[
 ```shell-unix-generic
 git clone https://github.com/jneug/typst-codelst.git codelst-0.0.3
 ```]
@@ -50,7 +50,7 @@ In either case, make sure the files are placed in a folder with the correct vers
 
 After installing the package, just import it inside your `typ` file:
 
-#sourcecode(linenos: false)[```typ
+#sourcecode(line-numbers: false)[```typ
 #import "@local/codelst:0.0.3": sourcecode
 ```]
 
@@ -59,7 +59,7 @@ After installing the package, just import it inside your `typ` file:
 To use CODELST as a module for one project, get the file `codelst.typ` from the repository and save it in your project folder.
 
 Import the module as usual:
-#sourcecode(linenos: false)[```typ
+#sourcecode(line-numbers: false)[```typ
 #import "codelst.typ": sourcecode
 ```]
 
