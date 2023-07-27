@@ -134,7 +134,7 @@
     // Measure max line numbers width
     let numbers-width = numbers-width // local scope
     if numbers-width == auto {
-      numbers-width = measure(raw(str(line-count)), styles).width
+      numbers-width = measure(raw(str(line-count + numbers-start)), styles).width
     }
     let next-lineno() = block(width:100%, inset: (x: 0pt, y: descender * .5))[#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
 
