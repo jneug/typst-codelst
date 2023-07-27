@@ -490,11 +490,9 @@ some code
 
 = Limiations and alternatvies
 
-== How it works
+== Limitations
 
-CODELST renders the code lines in a #cmd-[table] and not as a block. This might lead to problems in certain PDF viewers, when selecting the code for copy&paste, since some viewers select tables row-by-row and not columns first.
-
-Furthermore, since the code is split into individual lines and each line is rendered as its own #cmd-[raw] block, sometimes the syntax highlighting will not work correctly. This hopefully will be fixed in future releases.
+To render code with correct syntax highlighting and line numbers CODELST renders content line by line in a table. Since the complete code is rendered _once per line_ (!), it has a lot of overhead. This also mostly prevents the selection of code in a PDF.
 
 == Alternatives
 

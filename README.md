@@ -50,13 +50,17 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 
 ## Changelog
 
+### v0.0.4
+
+- Fixed issue with context unaware syntax highlighting.
+
 ### v0.0.3
 
 - Removed call to `#read()` from `#sourcefile()`.
 - Added `continue-numbering` argument to `#sourcecode()`.
 - Fixed problem with `showrange` having out of range line numbers.
 
-### v0.0.3
+### v0.0.2
 
 - Added a comprehensive manual.
 - Fixed crash for missing `lang` attribute in `raw` element.
