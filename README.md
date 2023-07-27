@@ -50,6 +50,12 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 
 ## Changelog
 
+### v0.0.5
+
+- Fixed insets for line highlights.
+- Added `numbers-width` option to manually set width of line numbers column.
+	- This allows line numbers on margins by setting `numbers-width` to `0pt` or a negative number like `-1em`.
+
 ### v0.0.4
 
 - Fixed issue with context unaware syntax highlighting.
