@@ -24,6 +24,7 @@
 	numbers-format: "1",
 	numbers-start: auto,
 	numbers-side: left,
+  numbers-width: auto,
 	numbers-style: (i) => i, // (i) => i.counter.display((no, ..args) => raw(str(no))),
 	continue-numbering: false,
 
@@ -130,7 +131,12 @@
     let descender = 1em - m1.height
     let line-gap = m2.height - 2*letter-height - descender
 
-    let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
+    // Measure max line numbers width
+    let numbers-width = numbers-width // local scope
+    if numbers-width == auto {
+		  numbers-width = measure(raw(str(line-count)), styles).width
+    }
+    let next-lineno() = block(width:100%, inset: (x: 0pt, y: descender * .5))[#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
 
     // Create the actual content rows
 		let grid-cont = ()
@@ -154,6 +160,7 @@
       // other than the required line.
       let next-line = (block(
         height: calc.max(m.height, letter-height) + descender,
+        inset: (x: 0pt, y: descender * .5),
         width: 100%,
         clip: true,
         spacing: 0pt,
@@ -179,18 +186,16 @@
 			#set par(justify:false)
 			#if not continue-numbering { __c_lineno.update(numbers-start - 1) }
 
-			#let ins = 0.3em
-			#let lines-width = measure(raw(str(line-count)), styles).width + 2*ins
-
 			#table(
 				columns: if line-numbers {
-					if numbers-side == left {(lines-width, 1fr)} else {(1fr, lines-width)}
+					// if numbers-side == left {(lines-width, 1fr)} else {(1fr, lines-width)}
+          if numbers-side == left {(numbers-width, 1fr)} else {(1fr, numbers-width)}
 				} else {
 					1
 				},
-				column-gutter: gutter - 2*ins,
+				column-gutter: gutter,
         row-gutter: line-gap,
-				inset: 0pt,
+        inset: 0pt,
 				stroke: none,
 				fill: (col, row) => {
 					if row/2 + numbers-start in highlighted { highlight-color } else { none }
