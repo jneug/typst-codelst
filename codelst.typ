@@ -121,35 +121,69 @@
 		}
 	}
 
-	// Createing the final content
-	style(styles => {
+  // Create final code block
+  code = raw(lang:code.lang, code-lines.join("\n"))
+
+	// Creating the final content
+	layout(size => style(styles => {
 		// Create the rows for the grid holding the code
 		let next-lineno() = [#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
 
-		let line-gap = measure-line-gap(styles)
-		let next-line( i ) = block(
-			height: 1em,
-			clip: true,
-			spacing: line-gap,
-			move(dy: (1em + line-gap) * -i, code)
-		)
+		// let line-gap = measure-line-gap(styles)
+    // let next-line( i ) = {
+    //     let line-m = measure(block(width:size.width, code-lines.at(i)), styles)
 
+    //     block(
+    //       height: line-m.height,
+    //       clip: true,
+    //       // spacing: line-gap,
+    //       spacing: 0pt,
+    //       stroke: .5pt,
+    //       move(dy: (1em + line-gap) * -i, code)
+    //     )
+    // }
+
+    let (m1, m2) = (
+      measure(raw("0"), styles),
+      measure(raw("0\n0"), styles)
+    )
+
+    let letter-height = m1.height
+    let descender = 1em - m1.height
+    let line-gap = m2.height - 2*letter-height - descender
+
+
+    let line-offset = 0pt
 		let grid-cont = ()
 		for (i, line) in code-lines.enumerate() {
+      let i-str = str(i)
+
 			if line-numbers and numbers-side == left {
-				grid-cont.push(next-lineno())
+        grid-cont.push(next-lineno())
 			}
 
-			let _i = str(i)
-			if _i in labels {
-				grid-cont.push([#raw(lang:code-lang, block:true, line)#label(labels.at(_i))])
-			} else {
-				// grid-cont.push(raw(lang:code-lang, block:true, line))
-				grid-cont.push(next-line(i))
-			}
+      // Measure actual line height (with potential line breaks)
+      let m = measure(block(width:size.width, raw(code-lines.at(i))), styles)
+      let offset = 0pt
+      if i > 0 {
+        offset = measure(block(width:size.width, raw(code-lines.slice(0, count:i).join("\n"))), styles).height + line-gap + descender // descender + 0.8em//+ 0.0874em// + 0.962pt
+      }
 
-			if line-numbers and numbers-side == right {
-				grid-cont.push(next-lineno())
+      let next-line = (block(
+        height: m.height + descender,
+        width: 100%,
+        clip: true,
+        spacing: 0pt,
+        move(dy: -offset, code)
+      ))
+      if i-str in labels {
+        grid-cont.push([#next-line#label(labels.at(i-str))])
+      } else {
+        grid-cont.push(next-line)
+      }
+
+      if line-numbers and numbers-side == right {
+        grid-cont.push(next-lineno())
 			}
 		}
 
@@ -172,8 +206,9 @@
 					1
 				},
 				column-gutter: gutter - 2*ins,
-				//row-gutter: 0.85em,
-				inset: ins,
+				// row-gutter: 0.85em,
+        row-gutter: line-gap,
+				inset: 0pt,
 				stroke: none,
 				fill: (col, row) => {
 					if row/2 + numbers-start in highlighted { highlight-color } else { none }
@@ -182,7 +217,7 @@
 			)
 			<codelst>
 		]
-	})
+	}))
 }
 
 #let sourcefile( code, file:none, lang:auto, ..args ) = {
@@ -200,7 +235,7 @@
 #let lineref( label, supplement:"line" ) = locate(loc => {
 	let lines = query(selector(label), loc)
 	assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
-	[#supplement #__c_lineno.at(lines.first().location()).first()]
+	[#supplement #numbering("1", ..__c_lineno.at(lines.first().location()))]
 })
 
 #let numbers-style( i ) = align(right, text(
