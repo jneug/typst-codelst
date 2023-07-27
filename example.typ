@@ -85,7 +85,7 @@ show <lineno>: (n) => { ... }
 		highlight-labels: true,
 		gutter: 2em,
 		label-regex: regex("<([a-z-]+)>")
-	)[```typc
+	)[```typ
 	#"hello world!" \
 	#"\"hello\n  world\"!" \
 	#"1 2 3".split() \ <split-example>
