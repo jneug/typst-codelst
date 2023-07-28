@@ -1,5 +1,5 @@
 
-#let __c_lineno = counter("@codelst-lines")
+#let codelst-counter = counter("@codelst-line-numbers")
 
 #let codelst-count-blanks( line, char:"\t" ) = {
   let m = line.match(regex("^" + char + "+"))
@@ -18,19 +18,48 @@
 
   return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
+#let codelst-numbering = numbering
+
+#let code-frame(
+  fill:      luma(250),
+  stroke:    .6pt + luma(200),
+  inset:	   (x: .45em, y: .65em),
+  radius:    3pt,
+  code
+) = block(
+  fill: fill,
+  stroke: stroke,
+  inset: inset,
+  radius: radius,
+  breakable: true,
+  width: 100%,
+  code
+)
+
+#let codelst-lno( lno ) = {
+  v(0.08em)
+  if type(lno) != "string" {
+    lno.counter.display((lno, ..x) => align(right, text(.8em, luma(160), raw(str(lno)))))
+  } else {
+    align(right, text(.8em, luma(160), raw(lno)))
+  }
+}
 
 #let sourcecode(
-  line-numbers: true,
-  numbers-format: "1",
+  lang: auto,
+
+  numbering: "1",
   numbers-start: auto,
   numbers-side: left,
   numbers-width: auto,
-  numbers-style: (i) => i, // (i) => i.counter.display((no, ..args) => raw(str(no))),
+  numbers-style: codelst-lno,
+  numbers-first: 1,
+  numbers-step: 1,
   continue-numbering: false,
 
   gutter: 10pt,
 
-  tab-indent: 4,
+  tab-indent: 2,
   gobble: auto,
 
   highlighted: (),
@@ -41,6 +70,8 @@
   showrange: none,
   showlines: false,
 
+  frame: code-frame,
+
   code
 ) = {
   // Find first raw element in body
@@ -49,7 +80,17 @@
   }
   assert.ne(code, none, message: "Missing raw content.")
 
-  let code-lang  = if code.has("lang") { code.lang } else { "plain" }
+  let line-numbers = numbering != none
+  let numbers-format = numbering
+
+  let code-lang = lang
+  if lang == auto {
+    if code.has("lang") {
+      code-lang = code.lang
+    } else {
+      code-lang = "plain"
+    }
+  }
   let code-lines = code.text.split("\n")
   let line-count = code-lines.len()
 
@@ -61,19 +102,20 @@
       calc.clamp(calc.max(..showrange), 1, line-count)
     )
     code-lines = code-lines.slice(..showrange)
+    line-count = code-lines.len()
     if numbers-start == auto {
       numbers-start = showrange.first() + 1
     }
   }
-  // Trim blank lines at start and finish
+  // TODO: Should this happen before showrange?
   if not showlines {
-    // FIXME: Also trims whitespace on non blank lines
-    code-lines = code-lines.join("\n").trim(regex("\s")).split("\n")
-    //code-lines = remove-blank-lines(code-lines)
+    let trim-start = code-lines.position((line) => line.trim() != "")
+    let trim-end   = code-lines.rev().position((line) => line.trim() != "")
+    code-lines = code-lines.slice(trim-start, line-count - trim-end)
+    line-count = code-lines.len()
   }
 
-  // Number of lines and starting value
-  line-count = code-lines.len()
+  // Starting line number
   if numbers-start == auto {
     numbers-start = 1
   }
@@ -110,101 +152,150 @@
     }
   }
 
-  // Create final code block
-  // (might have changed due to range option and trimming)
-  code = raw(lang:code-lang, code-lines.join("\n"))
-
   // Add a blank raw element, to allow use in figure
   raw("", lang:code-lang)
   // Does this make sense to pass full code to show rules?
-  // block(height:0pt, clip:true, code)
+  // #block(height:0pt, clip:true, code)
 
-  // Create the final table content
-  layout(size => style(styles => {
-    // Measuring font size and line height
-    let (m1, m2) = (
-      measure(raw("0"), styles),
-      measure(raw("0\n0"), styles)
+  if frame == none {
+    frame = (b) => b
+  }
+
+  frame(layout(size => style(styles => {
+
+  let m1 = measure(raw("0"), styles)
+  let m2 = measure(raw("0\n0"), styles)
+
+  let letter-height = m1.height
+  let descender = 1em - letter-height
+  let line-gap = m2.height - 2*letter-height - descender
+
+  // Measure the maximum width of the line numbers
+  // We need to measure every line, since the numbers
+  // are styled and could have unexpected formatting
+  // (e.g. line 10 is extra big)
+  let numbers-width = numbers-width
+  if numbering != none and numbers-width == auto {
+    numbers-width = calc.max(
+      ..range(numbers-first - 1, line-count, step:numbers-step).map((lno) => measure(
+        numbers-style(codelst-numbering(numbering, lno + numbers-start)),
+        styles
+      ).width)
+    ) + .1em
+  } else if numbering == none {
+    numbers-width = 0pt
+  }
+
+  let code-width = size.width - numbers-width - gutter
+
+  // Create line numbers and
+  // highlight / labels columns
+  let highlight-column = ()
+  let numbers-column = ()
+
+  for i in range(line-count) {
+    // Measure actual code line height
+    // (including with potential line breaks)
+    let m = measure(
+      block(
+        width: code-width,
+        spacing:0pt,
+        raw(code-lines.at(i))
+      ),
+      styles
     )
+    let line-height = calc.max(letter-height, m.height)
 
-    let letter-height = m1.height
-    let descender = 1em - m1.height
-    let line-gap = m2.height - 2*letter-height - descender
-
-    // Measure max line numbers width
-    let numbers-width = numbers-width // local scope
-    if numbers-width == auto {
-      numbers-width = measure(raw(str(line-count + numbers-start)), styles).width
-    }
-    let next-lineno() = block(width:100%, inset: (x: 0pt, y: descender * .5))[#__c_lineno.step()#__c_lineno.display(numbers-format)<lineno>]
-
-    // Create the actual content rows
-    let grid-cont = ()
-    for (i, line) in code-lines.enumerate() {
-      // Line numbers left side
-      if line-numbers and numbers-side == left {
-        grid-cont.push(next-lineno())
-      }
-
-      // Measure actual code line height
-      // (including with potential line breaks)
-      let m = measure(block(width:size.width, raw(code-lines.at(i))), styles)
-      // Measure offset for moving the code block
-      let offset = 0pt
-      if i > 0 {
-        offset = measure(block(width:size.width, raw(code-lines.slice(0, count:i).join("\n"))), styles).height + line-gap + descender
-      }
-
-      // the actual code line is created by shifting the
-      // complete code block up and clipping everything
-      // other than the required line.
-      let next-line = (block(
-        height: calc.max(m.height, letter-height) + descender,
-        inset: (x: 0pt, y: descender * .5),
-        width: 100%,
-        clip: true,
-        spacing: 0pt,
-        move(dy: -offset, code)
-      ))
-      // Add label to line if present
-      if str(i) in labels {
-        grid-cont.push([#next-line#label(labels.at(str(i)))])
+    numbers-column.push(block(
+      width: 100%,
+      // clip: true,
+      // breakable: true,
+      height: line-height,
+      // spacing: 0pt,
+      below: if i == line-count - 1 {
+        0pt
       } else {
-        grid-cont.push(next-line)
+        descender + line-gap
+      },
+      {
+        codelst-counter.step()
+        if i + 1 >= numbers-first and calc.rem(i + 1 - numbers-first, numbers-step) == 0 [
+          #numbers-style(codelst-counter.display((lno, ..x) => [
+            #codelst-numbering(numbering, lno)<line-number>
+          ]))
+          #if str(i) in labels { label(labels.at(str(i))) }
+        ]
       }
+    ))
 
-      // Line numbers right side
-      if line-numbers and numbers-side == right {
-        grid-cont.push(next-lineno())
-      }
-    }
-
-    // Create content table
-    [
-      #show <lineno>: numbers-style
-      #set align(left)
-      #set par(justify:false)
-      #if not continue-numbering { __c_lineno.update(numbers-start - 1) }
-
-      #table(
-        columns: if line-numbers {
-          // if numbers-side == left {(lines-width, 1fr)} else {(1fr, lines-width)}
-          if numbers-side == left {(numbers-width, 1fr)} else {(1fr, numbers-width)}
+    highlight-column.push({
+      // move(dy:-.5 * (line-gap + descender),
+      block(
+        breakable: true,
+        width: size.width,
+        fill: if i + numbers-start in highlighted {
+          highlight-color
         } else {
-          1
+          none
         },
-        column-gutter: gutter,
-        row-gutter: line-gap,
-        inset: 0pt,
-        stroke: none,
-        fill: (col, row) => {
-          if row/2 + numbers-start in highlighted { highlight-color } else { none }
-        },
-        ..grid-cont
+        spacing: 0pt,
+        height: line-height + line-gap + descender
+        // height: line-height
       )
-      <codelst>
-    ]
-  }))
+      // )
+      // Prevent some empty space at the bottom due
+      // to line highlights
+      if i == line-count -1 and i + numbers-start not in highlighted {
+        v(-1 * (line-gap + descender))
+      }
+    })
+  }
+
+  numbers-column = {
+    if not continue-numbering {
+      codelst-counter.update(numbers-start - 1)
+    }
+    //stack(dir: ttb, ..numbers-column)
+    numbers-column.join()
+  }
+  highlight-column = {
+    set align(left)
+    stack(dir:ttb,
+      // spacing: -.5 * (line-gap + descender),
+      ..highlight-column
+    )
+    // highlight-column.join()
+  }
+
+  // Create final code block
+  // (might have changed due to range option and trimming)
+  let code-column = {
+    set align(left)
+    set par(justify:false)
+    raw(lang:code-lang, code-lines.join("\n"))
+  }
+
+  grid(
+    columns: if numbering == none {
+      (-gutter, 1fr)
+    } else if numbers-side != right {
+      (-gutter, numbers-width, 1fr)
+    } else {
+      (-gutter, 1fr, numbers-width)
+    },
+    column-gutter: gutter,
+
+    ..if numbering == none {
+      (highlight-column, code-column)
+    } else if numbers-side != right {
+      (highlight-column, numbers-column, code-column)
+    } else {
+      (highlight-column, code-column, numbers-column)
+    }
+  )
+
+  })) // end style + layout
+  ) // end frame
 }
 
 #let sourcefile( code, file:none, lang:auto, ..args ) = {
@@ -222,34 +313,10 @@
 #let lineref( label, supplement:"line" ) = locate(loc => {
   let lines = query(selector(label), loc)
   assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
-  [#supplement #numbering("1", ..__c_lineno.at(lines.first().location()))]
+  [#supplement #numbering("1", ..codelst-counter.at(lines.first().location()))]
 })
 
-#let numbers-style( i ) = align(right, text(
-  fill: luma(160),
-  size: .8em,
-  i
-))
-
-#let code-frame(
-  fill:      luma(250),
-  stroke:    1pt + luma(200),
-  inset:	   (x: 5pt, y: 10pt),
-  radius:    4pt,
-  code
-) = block(
-  fill: fill,
-  stroke: stroke,
-  inset: inset,
-  radius: radius,
-  breakable: true,
-  width: 100%,
-  code
-)
-
 #let codelst-styles( body ) = {
-  show <codelst>: code-frame
-  show <lineno>: numbers-style
   show figure.where(kind: raw): set block(breakable: true)
 
   body
