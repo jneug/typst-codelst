@@ -321,3 +321,32 @@
 
   body
 }
+
+
+#let codelst(
+  tag: "codelst",
+  reversed: false,
+  ..args
+) = {
+  if not reversed {
+    return (body) => {
+      show raw.where(lang: tag): (code) => {
+        let code-lines = code.text.split("\n")
+        let lang = code-lines.remove(0).trim().slice(1)
+        sourcecode(..args, raw(lang:lang, code-lines.join("\n")))
+      }
+      body
+    }
+  } else {
+    return (body) => {
+      show raw: (code) => {
+        if code.text.starts-with(":" + tag) {
+          sourcecode(..args, raw(lang: code.lang, code.text.slice(tag.len() + 1)))
+        } else {
+          code
+        }
+      }
+      body
+    }
+  }
+}
