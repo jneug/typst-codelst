@@ -177,6 +177,7 @@ fn main() {
 
 #block(width:100%)[
   #sourcecode(
+    numbers-width: -6mm,
     frame: block.with(width: 75%, fill:rgb("#b7d4cf"), inset:5mm)
   )[```rust
   // Functions that "don't" return a value, actually return the unit type `()`
