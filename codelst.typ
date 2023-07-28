@@ -9,6 +9,7 @@
     return 0
   }
 }
+
 #let codelst-add-blanks( line, spaces:4, gobble:0 ) = {
   if gobble in (none, false) { gobble = 0 }
 
@@ -18,6 +19,7 @@
 
   return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
+
 #let codelst-numbering = numbering
 
 #let code-frame(
@@ -219,7 +221,7 @@
       },
       {
         codelst-counter.step()
-        if i + 1 >= numbers-first and calc.rem(i + 1 - numbers-first, numbers-step) == 0 [
+        if i + numbers-start >= numbers-first and calc.rem(i + numbers-start - numbers-first, numbers-step) == 0 [
           #numbers-style(codelst-counter.display((lno, ..x) => [
             #codelst-numbering(numbering, lno)<line-number>
           ]))
@@ -321,7 +323,6 @@
 
   body
 }
-
 
 #let codelst(
   tag: "codelst",
