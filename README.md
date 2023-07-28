@@ -50,6 +50,22 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 
 ## Changelog
 
+### v1.0.0
+
+- Complete rewrite of code rendering.
+- New options for `#sourcecode()`:
+	- `lang`: Overwrite code language setting.
+	- `numbers-first`: First line number to show.
+	- `numbers-step`: Only show every n-th number.
+	- `frame`: Set a frame (replaces `<codelst>` label.)
+	- Merged `line-numbers` and `numbering` options.
+- Removed `#numbers-style()` function.
+	- `numbers-style` option now gets passed `counter.display()`.
+- Removed `<codelst>` label.
+- `codelst-style` only sets `breakable` for figures.
+- New `codelst` function to setup a catchall show rules for `raw` text.
+- Code improvements and refactorings.
+
 ### v0.0.5
 
 - Fixed insets for line highlights.
