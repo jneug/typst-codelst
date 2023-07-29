@@ -1,6 +1,6 @@
 [package]
 name = "codelst"
-version = "0.0.5"
+version = "1.0.0"
 entrypoint = "codelst.typ"
 authors = ["Jonas Neugebauer"]
 license = "MIT"
