@@ -4,7 +4,7 @@
 
 ## Usage
 
-For Typst 0.6.0 or later import the package from the typst preview repository:
+For Typst 0.6.0 or later, import the package from the typst preview repository:
 
 ```js
 #import "@preview/codelst:0.0.5": sourcecode
@@ -16,7 +16,7 @@ For Typst before 0.6.0 or to use **codelst** as a local module, download the pac
 #import "codelst.typ": sourcecode
 ```
 
-After importing the package, simple wrap any fenced code block in a call to `#sourcecode()`:
+After importing the package, simply wrap any fenced code block in a call to `#sourcecode()`:
 
 ````js
 #import "@preview/codelst:0.0.5": sourcecode
@@ -46,7 +46,7 @@ See `example.typ` for some quick usage examples.
 
 The documentation is created using [Mantys](https://github.com/jneug/typst-mantys), a Typst template for creating package documentation.
 
-To compile the manual Mantys needs to be available as a local package. Refer to Mantys' manual for instructions how to do so.
+To compile the manual, Mantys needs to be available as a local package. Refer to Mantys' manual for instructions on how to do so.
 
 ## Changelog
 
@@ -64,6 +64,7 @@ To compile the manual Mantys needs to be available as a local package. Refer to 
 - Removed `<codelst>` label.
 - `codelst-style` only sets `breakable` for figures.
 - New `codelst` function to setup a catchall show rules for `raw` text.
+- `label-regex: none` disables labels parsing.
 - Code improvements and refactorings.
 
 ### v0.0.5

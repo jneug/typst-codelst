@@ -1,4 +1,4 @@
-#import "@local/mantys:0.0.2": *
+#import "@local/mantys:0.0.3": *
 
 #show: mantys.with(
     name:       "codelst",
@@ -11,7 +11,7 @@
     abstract:   [
         #pkg[codelst] is a *Typst* package inspired by LaTeX package like #pkg[listings]. It adds functionality to render source code with line numbers, highlighted lines and more.
     ],
-    example-imports: ("@local/codelst:0.0.5": "*")
+    example-imports: ("@local/codelst:1.0.0": "*")
 )
 
 #import "codelst.typ"
@@ -27,15 +27,19 @@ This package was created to render source code on my exercise sheets for my comp
 
 Since I used LaTeX before, I got inspired by packages like #footlink("https://ctan.org/pkg/listings", pkg("listings")) and attempted to replicate some of its functionality. CODELST is the result of this effort.
 
-= Usage
-
 #wbox[
-  Version #mty.ver(0, 0, 5) introduced a new method for rendering raw text, that deals with some of the issues of previous methods. This did break some other features of the package, mostly related to formatting. To cleanup the codebase some other breaking changes (e.g. renaming of argeuments) where done.
+  Version #mty.ver(0, 0, 5) introduced a new method for rendering raw text, that deals with some of the issues of previous methods. This did break some other features of the package, mostly related to formatting. To clean up the codebase, some other breaking changes (e.g. renaming of arguments) were done.
 ]
+
+This document is a full description of all available commands and options. The first part provides examples of the major features. The second part is a command reference for CODELST.
+
+See `example.typ`/`example.pdf` for some quick examples how to use CODELST.
+
+= Usage
 
 == Use as a package (Typst 0.6.0 and later)
 
-For Typst 0.6.0 and later CODELST can be imported from the preview repository:
+For Typst 0.6.0 and later, CODELST can be imported from the preview repository:
 
 #sourcecode(numbering:none)[```typ
 #import "@preview/codelst:0.0.4": sourcecode
@@ -87,7 +91,7 @@ CODELST adds the #cmd[sourcecode] command with various options to render code bl
 ```]
 ````]
 
-CODELST add line numbers and some formatting to the code. Line numbers can be configured with a variety of options and #arg[frame] sets a custom wrapper function for the code. Setting #arg(frame: none) disables the code frame.
+CODELST adds line numbers and some formatting to the code. Line numbers can be configured with a variety of options and #arg[frame] sets a custom wrapper function for the code. Setting #arg(frame: none) disables the code frame.
 
 #example[````
 #sourcecode(
@@ -115,7 +119,7 @@ project of the Artos Institute.
 
 Since it is common to highlight code blocks by putting them inside a #cmd-[block] element, CODELST does so with a light gray background and a border.
 
-The frame can be modified by setting #arg[frame] to a function with ine argument, a custom wrapper can be specified. To do this globally you can create your own #cmd-[sourcecode] command:
+The frame can be modified by setting #arg[frame] to a function with one argument, a custom wrapper can be specified. To do this globally, an alias #cmd-[sourcecode] command can be created:
 
 #example[````
 #let codelst-sourcecode = sourcecode
@@ -180,7 +184,7 @@ project of the Artos Institute.
 ```]
 ]
 
-CODELST handles whitespace in the code to save space and view the code as intended (and indented), even if tabs are used. Unnecessary blank lines at the beginning and end will be removed, alongside superfluous indention:
+CODELST handles whitespace in the code to save space and display the code as intended (and indented), even if tabs are used. Unnecessary blank lines at the beginning and end will be removed, alongside superfluous indention:
 
 #example[````
 #sourcecode[```java
@@ -221,13 +225,13 @@ This behavior can be disabled or modified:
 ```]
 ]
 
-To show code from a file load it with #cmd[read] and pass the result to #cmd[sourcefile] alongside the filename:
+To show code from a file, load it with #cmd[read] and pass the result to #cmd[sourcefile] alongside the filename:
 
 #example(raw("#sourcefile(read(\"typst.toml\"), file:\"typst.toml\")"))[
 	#codelst.sourcefile(read("typst.toml"), file:"typst.toml")
 ]
 
-Its useful to define an alias for #cmd-[sourcefile]:
+It is useful to define an alias for #cmd-[sourcefile]:
 
 #sourcecode[```typc
 let codelst-sourcefile = sourcefile
@@ -268,7 +272,7 @@ Specific lines can be highlighted:
 )
 ]
 
-To reference a line from other parts of the document, CODELST looks for labels in the source code and makes them available to Typst. The regex to look for labels can be modified to be compatible to different source syntaxes:
+To reference a line from other parts of the document, CODELST looks for labels in the source code and makes them available to Typst. The regex to look for labels can be modified to be compatible with different source syntaxes:
 
 #example[```
 #sourcefile(
@@ -371,7 +375,9 @@ This is nice in combination with figures:
 )
 ````]
 
-Using a #var-[show] rule to set all #cmd-[raw] blocks inside #cmd-[sourcecode] is not possible, since the command internally creates a new #cmd-[raw] block and would cause Tyost to crash with an overlow error. Using a custom #arg[lang] can work around this, though:
+=== Using CODELST for all raw text <sec-catchall>
+
+Using a #var-[show] rule to set all #cmd-[raw] blocks inside #cmd-[sourcecode] is not possible, since the command internally creates a new #cmd-[raw] block and would cause Typst to crash with an overflow error. Using a custom #arg[lang] can work around this, though:
 
 #example[````
 #show raw.where(lang: "clst-typ"): (code) => sourcecode(lang:"typ", code)
@@ -390,7 +396,7 @@ _source_
 = code
 ```]
 
-CODELST provides two ways to get around this issue, however. One is to setup a custom language that is directly followed by a collon and the true language tag:
+CODELST provides two ways to get around this issue, however. One is to set up a custom language that is directly followed by a colon and the true language tag:
 
 #sourcecode[```codelst:typ
 *some*
@@ -451,166 +457,198 @@ Setting up one of these catchall methods is easily done by using the #cmd[codels
     #argument("numbering", type:("string", "function", none), default:"1")[
         A #doc("meta/numbering", name:"numbering pattern") to use for line numbers. Set to #value(none) to disable line numbers.
     ]
+
     #argument("numbers-start", type:(1,auto), default: auto)[
         The number of the first code line. If set to #value(auto), the first line will be set to the start of #arg[showrange] or #value(1) otherwise.
     ]
+
     #argument("numbers-side", default:choices(left, right, default:left), type:"alignment")[
         On which side of the code the line numbers should appear.
     ]
+
     #argument("numbers-width", type:(auto, 1pt), default:auto)[
         The width of the line numbers column. Setting this to #value(auto) will measure the maximum size of the line numbers and size the column accordingly. Giving a negative length will move the numbers out of the frame into the margin.
     ]
+
     #argument("numbers-first", default:1)[
       The first line number to show. Compared to #arg[numbers-start], this will not change the numbers but hide all numbers before the given number.
     ]
+
     #argument("numbers-step", default:1)[
+      The step size for line numbers.
+      For #arg[numbers-step]: $n$ only every $n$-th line number is shown.
     ]
+
     #argument("numbers-style", default:"(i) => i", type:"function")[
         A function of one argument to format the line numbers. Should return #dtype[content].
     ]
-	#argument("continue-numbering", default:false)[
-		If set to #value(true), the line numbers will continue from the last call of #cmd-[sourcecode].
 
-		#example(raw("#sourcecode[```
-one
-two
-```]
-#lorem(10)
-#sourcecode(continue-numbering: true)[```
-three
-four
-```]
-"))
-	]
+    #argument("continue-numbering", default:false)[
+      If set to #value(true), the line numbers will continue from the last call of #cmd-[sourcecode].
+    ]
+    #side-by-side[````
+      #sourcecode[```
+        one
+        two
+      ```]
+      #lorem(10)
+      #sourcecode(continue-numbering: true)[```
+        three
+        four
+      ```]
+    ````]
+
     #argument("gutter", default:10pt)[
         Gutter between line numbers and code lines.
     ]
-    #argument("tab-indent", default:4)[
+
+    #argument("tab-indent", default:2)[
         Number of spaces to replace tabs at the start of each line with.
     ]
+
     #argument("gobble", default:auto, type:(auto, "integer", "boolean"))[
         How many whitespace characters to remove from each line. By default, the number is automatically determined by finding the maximum number of whitespace all lines have in common. If #arg(gobble: false), no whitespace is removed.
     ]
+
     #argument("highlighted", default:())[
         Line numbers to highlight.
 
         Note that the numbers will respect #arg[numbers-start]. To highlight the second line with #arg(numbers-start: 15), pass #arg(highlighted: (17,))
     ]
+
     #argument("highlight-color", default:rgb(234, 234,189))[
         Color for highlighting lines.
     ]
+
     #argument("label-regex", type:"regular expression")[
-        A #dtype("regular expression") for matching labels in the source code. The default value will match labels with at least three characters at the end of lines, separated with a line comment (`//`). For example:
+      A #dtype("regular expression") for matching labels in the source code. The default value will match labels with at least three characters at the end of lines, separated with a line comment (`//`). For example:
 
-        ```typ
-        #strong[Some text] // <my-line-label>
-        ```
+      ```typ
+      #strong[Some text] // <my-line-label>
+      ```
 
-        If this line matches on a line, the full match will be removed from the output and the content of the first capture group will be used as the label's name (`my-line-label` in the example above).
+      If this line matches on a line, the full match will be removed from the output and the content of the first capture group will be used as the label's name (`my-line-label` in the example above).
 
-        Note that to be valid, the expression needs to have at least one capture group.
+      Note that to be valid, the expression needs to have at least one capture group.
 
-        To reference a line, #cmd[lineref] should be used.
+      To reference a line, #cmd[lineref] should be used.
     ]
+
     #argument("highlight-labels", default:false)[
-        If set to #value(true), lines matching #arg[label-regex] will be highlighted.
+      If set to #value(true), lines matching #arg[label-regex] will be highlighted.
     ]
+
     #argument("showrange", default:none, type:(none,"array"))[
-        If set to an array with exactly two #dtype("integer")s, the code-lines will be sliced to show only the lines within that range.
+      If set to an array with exactly two #dtype("integer")s, the code-lines will be sliced to show only the lines within that range.
 
-        For example, #arg(showrange: (5, 10)) will only show the lines 5 to 10.
+      For example, #arg(showrange: (5, 10)) will only show the lines 5 to 10.
 
-        If settings this and #arg(numbers-start: auto), the line numbers will start at the number indicated by the first number in #arg[showrange]. Otherwise, the numbering will start as specified with #arg[numbers-start].
+      If settings this and #arg(numbers-start: auto), the line numbers will start at the number indicated by the first number in #arg[showrange]. Otherwise, the numbering will start as specified with #arg[numbers-start].
     ]
-    #argument("showlines", default:false)[
-        If set to #value(true), no blank lines will be stripped from the start and end of the code. Otherwise, those lines will be removed from the output.
 
-        Line numbering will not be adjusted to the removed lines (other than with #arg[showrange]).
+    #argument("showlines", default:false)[
+      If set to #value(true), no blank lines will be stripped from the start and end of the code. Otherwise, those lines will be removed from the output.
+
+      Line numbering will not be adjusted to the removed lines (other than with #arg[showrange]).
+    ]
+
+    #argument("frame", type:"function", default:"code-frame")[
+      A function of one argument to frame the source code. The default is #cmd[code-frame]. #value(none) disables any frame.
     ]
 ]
 
-#command("sourcefile", arg[code], arg(filename: none), arg(lang: auto), sarg[args])[
-    Takes a text string #arg[code] loaded via the #cmd[read] function and passes it to #cmd-[sourcecode] for display. If #arg[filename] is given, the code language is guessed by the file's extension. Otherwise, #arg[lang] can be provided explicitly.
+#command("sourcefile", arg[code], arg(file: none), arg(lang: auto), sarg[args])[
+    Takes a text string #arg[code] loaded via the #cmd[read] function and passes it to #cmd-[sourcecode] for display. If #arg[file] is given, the code language is guessed by the file's extension. Otherwise, #arg[lang] can be provided explicitly.
 
-	Any other #arg[args] will be passed to #cmd-[sourcecode].
+	  Any other #arg[args] will be passed to #cmd-[sourcecode].
 
-    #example(raw("#sourcefile(read(\"typst.toml\"), lang:\"toml\")"))[
+    #example(raw("#sourcefile(read(\"typst.toml\"), file:\"typst.toml\")"))[
 		#codelst.sourcefile(read("typst.toml"), lang:"toml")
 	]
 
 	#ibox[
-		The original intend for #cmd-[sourcefile] was, to raed the provided filename, without the need for the user to call #cmd-[read]. Due to the security measure, that packages can only read files from their own directory, the call to #cmd-[read] needs to happen outside of #cmd-[sourcefile] in the document.
+		The idea for #cmd-[sourcefile] was to read the provided filename without the need for the user to call #cmd-[read]. Due to the security measure, that packages can only read files from their own directory, the call to #cmd-[read] needs to happen outside #cmd-[sourcefile] in the document.
 
 		For this reason, the command differs from #cmd-[sourcecode] only insofar as it accepts a #dtype("string") instead of `raw` #dtype("content").
 
 		Future releases might use the #arg[filename] for other purposes, though.
 
-    To deal with this, simply add the following code to the top of your document:
+    To deal with this, simply add the following code to the top of your document to define a local alias for #cmd-[sourcefile]:
 
     ```typ
-    #let srcfile( filename, ..args ) = sourcefile(read(filename), file:filename, ..args)
+    #let codelst-sourcefile = sourcefile
+    #let sourcefile( filename, ..args ) = codelst-sourcefile(read(filename), file:filename, ..args)
     ```
 	]
 ]
 
 #command("lineref", arg[label], arg(supplement: "line"))[
-    Creates a reference to a labeled line in the source code. #arg[label] is the label to reference.
+  Creates a reference to a code line with a label. #arg[label] is the label to reference.
 
-    #example(raw("#sourcecode[```java
-class HelloWorld {
-	public static void main( String[] args ) { // <main-method>
-		System.out.println(\"Hello World!\");
-	}
-}
-```]
+  #example[````
+  #sourcecode[```java
+  class HelloWorld {
+    public static void main( String[] args ) { // <main-method>
+      System.out.println("Hello World!");
+    }
+  }
+  ```]
 
-See #lineref(<main-method>) for a main method in Java."))
+  See #lineref(<main-method>) for a main method in Java.
+  ````]
 
-    How to set labels for lines, refer to the documentation of #arg[label-regex] at #refcmd("sourcecode").
+  How to set labels for lines, refer to the documentation of #arg[label-regex] at #refcmd("sourcecode").
 ]
 
-#command("code-frame", ..args(fill:      luma(250),
-    stroke:    1pt + luma(200),
-    inset:     (x: 5pt, y: 10pt),
-    radius:    4pt,
-    [code]))[
-    Applies the CODELST default styles to the document. Source code will be wrapped in #cmd[code-frame] and numbers styled with #cmd[numbers-style].
+#command("code-frame", ..args(
+  fill: luma(250),
+  stroke: 1pt + luma(200),
+  inset: (x: 5pt, y: 10pt),
+  radius: 4pt,
+  [code]
+))[
+  Convenience function to create a #cmd-[block] to wrap code inside. The arguments are passed to #doc("layout/block").
 
+  The default values create the default gray box around source code.
 
-    #example(raw("#show <codelst>: code-frame.with(
-	fill: gray,
-	stroke: 2pt + lime,
-	radius: 8pt
-)
-#sourcecode[```
-some code
-```]"))
+  Should be used with the #arg[frame] argument in #cmd-[sourcecode].
+
+  #example[```
+  #code-frame(lorem(20))
+  ```]
+
+  #example[````
+  #sourcecode(
+    frame: code-frame.with(
+      fill:   green.lighten(90%),
+      stroke: green
+    )
+  )[```typc
+  lorem(20)
+  ```]
+  ````]
 ]
 
-// #command("numbers-style", arg[no])[
-//     Applies the default CODELST style for line numbers. Can be used in a #var-[show] rule or as a value to #arg[numbers-style].
+#command("codelst", ..args(
+  tag: "codelst",
+  reversed: false
+), sarg[sourcecode-args])[
+  Sets up a default style for raw blocks. Read @sec-catchall for details on how it works.
 
-//     #example[```typ
-//     #for i in range(3,6) [
-//         - #numbers-style([#i])
-//     ]
-//     ```]
-// ]
-
-#command("codelst-styles", barg[body])[
-    Applies the CODELST default styles to the document. Source code will be wrapped in #cmd[code-frame] and numbers styled with #cmd[numbers-style].
-
-
-    #sourcecode[```typ
-    #show: codelst-styles
-    ```]
+  #sourcecode[```typ
+  #show: codelst()
+  ```]
 ]
 
 = Limiations and alternatvies
 
-== Limitations
+== Limitations and Issues
 
-To render code with correct syntax highlighting and line numbers CODELST renders content line by line in a table. Since the complete code is rendered _once per line_ (!), it has a lot of overhead. This also mostly prevents the selection of code in a PDF.
+To lay out the code and line numbers correctly, CODELST needs to know the available space before calculating the correct sizes. This will lead to problems when changing the layout of the code later on, for example with a #var-[show] rule.
+
+The way line numbers are laid out, the alignment might drift off for large code blocks. Page breaks are a major cause for this. If applicable, it can help to split large blocks of code into smaller chunks, for example by using #arg[showrange].
+
+The insets for line highlights are slightly off.
 
 == Alternatives
 
