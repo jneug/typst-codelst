@@ -143,13 +143,15 @@
 
   // Parse labels
   let labels = (:)
-  for (i, line) in code-lines.enumerate() {
-    let m = line.match(label-regex)
-    if m != none {
-      labels.insert(str(i), m.captures.at(0))
-      code-lines.at(i) = line.replace(label-regex, "")
-      if highlight-labels {
-        highlighted.push(i + numbers-start)
+  if label-regex != none {
+    for (i, line) in code-lines.enumerate() {
+      let m = line.match(label-regex)
+      if m != none {
+        labels.insert(str(i), m.captures.at(0))
+        code-lines.at(i) = line.replace(label-regex, "")
+        if highlight-labels {
+          highlighted.push(i + numbers-start)
+        }
       }
     }
   }
