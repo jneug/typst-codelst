@@ -42,7 +42,7 @@ See `example.typ`/`example.pdf` for some quick examples how to use CODELST.
 For Typst 0.6.0 and later, CODELST can be imported from the preview repository:
 
 #sourcecode(numbering:none)[```typ
-#import "@preview/codelst:0.0.4": sourcecode
+#import "@preview/codelst:0.0.5": sourcecode
 ```]
 
 Alternatively, the package can be downloaded and saved into the system dependent local package repository.
@@ -51,15 +51,15 @@ Either download the current release from GitHub#footnote[#link("https://github.c
 
 #sourcecode(numbering:none)[
 ```shell-unix-generic
-git clone https://github.com/jneug/typst-codelst.git codelst-0.0.4
+git clone https://github.com/jneug/typst-codelst.git codelst-0.0.5
 ```]
 
-In either case, make sure the files are placed in a folder with the correct version number: `codelst-0.0.4`
+In either case, make sure the files are placed in a folder with the correct version number: `codelst-0.0.5`
 
 After installing the package, just import it inside your `typ` file:
 
 #sourcecode(numbering:none)[```typ
-#import "@local/codelst:0.0.4": sourcecode
+#import "@local/codelst:0.0.5": sourcecode
 ```]
 
 == Use as a module
