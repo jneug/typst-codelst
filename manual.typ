@@ -9,7 +9,7 @@
     version:    "1.0.0",
     date:       "2023-07-19",
     abstract:   [
-        #pkg[codelst] is a *Typst* package inspired by LaTeX package like #pkg[listings]. It adds functionality to render source code with line numbers, highlighted lines and more.
+        #package[codelst] is a *Typst* package inspired by LaTeX package like #package[listings]. It adds functionality to render source code with line numbers, highlighted lines and more.
     ],
     example-imports: ("@local/codelst:1.0.0": "*")
 )
@@ -25,7 +25,7 @@
 
 This package was created to render source code on my exercise sheets for my computer science classes. The exercises required source code to be set with line numbers that could be referenced from other parts of the document, to highlight certain lines and to load code from files into my documents.
 
-Since I used LaTeX before, I got inspired by packages like #footlink("https://ctan.org/pkg/listings", pkg("listings")) and attempted to replicate some of its functionality. CODELST is the result of this effort.
+Since I used LaTeX before, I got inspired by packages like #footlink("https://ctan.org/package/listings", package("listings")) and attempted to replicate some of its functionality. CODELST is the result of this effort.
 
 #wbox[
   Version #mty.ver(0, 0, 5) introduced a new method for rendering raw text, that deals with some of the issues of previous methods. This did break some other features of the package, mostly related to formatting. To clean up the codebase, some other breaking changes (e.g. renaming of arguments) were done.
@@ -325,7 +325,7 @@ _source_
 
 Note that the style function for line numbers receives the result of a call to #cmd-[counter.display]. The #doc("meta/counter") can be accessed via the `counter` attribute.
 
-Using other packages like #pkg[showybox] is easy:
+Using other packages like #package[showybox] is easy:
 #example[````
 #import "@preview/showybox:0.2.0": showybox
 
