@@ -36,7 +36,7 @@ Normal #cmd[raw] works as expected:
 
 #code-block(code-example)
 
-Using #cmd[sourcecode] will add line numbers and a frame. Very long lines will be clipped.
+Using #cmd[sourcecode] will add line numbers and a frame. Very long lines will overflow.
 
 #code-block(sourcecode(code-example))
 
