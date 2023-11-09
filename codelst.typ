@@ -22,11 +22,31 @@
 
 #let codelst-numbering = numbering
 
+#let codelst-raw( ..args ) = raw.with(..args)
+
+#let codelst-raw-copy( code, text:none, ..overrides ) = {
+  let args = (:)
+  for k in ("syntaxes", "theme", "align", "lang", "block") {
+    if code.has(k) {
+      args.inset(k, code.at(k))
+    }
+  }
+  for (k, v) in overrides.named() {
+    args.insert(k, v)
+  }
+  if text == none {
+    raw(..args, code.text)
+  } else {
+    raw(..args, text)
+  }
+}
+
 #let code-frame(
   fill:      luma(250),
   stroke:    .6pt + luma(200),
   inset:	   (x: .45em, y: .65em),
   radius:    3pt,
+  clip:      false,
   code
 ) = block(
   fill: fill,
@@ -35,6 +55,7 @@
   radius: radius,
   breakable: true,
   width: 100%,
+  clip: clip,
   code
 )
 
@@ -73,6 +94,8 @@
   showlines: false,
 
   frame: code-frame,
+  syntaxes: (),
+  theme: none,
 
   code
 ) = {
@@ -278,7 +301,20 @@
     set align(left)
     set par(justify:false)
     v(.5 * (line-gap + descender))
-    raw(lang:code-lang, code-lines.join("\n"))
+    if theme == none {
+      raw(
+        lang:code-lang,
+        syntaxes: syntaxes,
+        code-lines.join("\n")
+      )
+    } else {
+      raw(
+        lang:code-lang,
+        syntaxes: syntaxes,
+        theme: theme,
+        code-lines.join("\n")
+      )
+    }
   }
 
   grid(
@@ -338,7 +374,9 @@
       show raw.where(lang: tag): (code) => {
         let code-lines = code.text.split("\n")
         let lang = code-lines.remove(0).trim().slice(1)
-        sourcecode(..args, raw(lang:lang, code-lines.join("\n")))
+        sourcecode(..args,
+          codelst-raw-copy(code, text:code-lines.join("\n"))
+        )
       }
       body
     }
@@ -346,7 +384,7 @@
     return (body) => {
       show raw: (code) => {
         if code.text.starts-with(":" + tag) {
-          sourcecode(..args, raw(lang: code.lang, code.text.slice(tag.len() + 1)))
+          sourcecode(..args, codelst-raw-copy(code, text:code.text.slice(tag.len() + 1)))
         } else {
           code
         }
