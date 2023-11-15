@@ -25,28 +25,31 @@
 // Long line that breaks
 This report is embedded in the ArtosFlow project. ArtosFlow is a project of the Artos Institute.
 
-// Very long line without linebreak
+/*
+ Very long line without linebreak
+ with a preceeding block comment
+*/
 This_report_is_embedded_in_the_ArtosFlow_project._ArtosFlow_is_a_project_of_the_Artos_Institute.
 
 // End example
 ```
 
-
 Normal #cmd[raw] works as expected:
 
 #code-block(code-example)
 
-Using #cmd[sourcecode] will add line numbers and a frame. Very long lines will overflow.
+Using #cmd[sourcecode] will add line numbers and a frame.
 
 #code-block(sourcecode(code-example))
 
+#pagebreak()
+#code-block(sourcecode(
+  showrange: (15, 21), showlines: true,
+code-example))
+
 Sourcecode can be loaded from a file and passed to #cmd[sourcefile]. Any #codelst sourcecode can be wrapped inside #cmd[figure] as expected.
 
-#codelst blocks line numbers can be formatted via a #cmd[show] rules like:
-
-```typc
-show <line-number>: (n) => { ... }
-```
+#codelst line numbers can be formatted via a bunch of `numbers-` options:
 
 #code-block[
 	#let filename = "typst.toml"
@@ -62,12 +65,12 @@ show <line-number>: (n) => { ... }
 		],
 		fig
 	)
-	#show <line-number>: number-format
 
 	#figure(
 		caption: filename,
 		sourcefile(
 			numbers-side: right,
+      numbers-style: number-format,
 			file: filename,
 			read(filename))
 	)<lst-sourcefile>
@@ -100,12 +103,12 @@ let code = sourcecode.with(
 		label-regex: regex("<([a-z-]+)>"),
 		frame: (code) => block(width:100%, fill: rgb(254, 249, 222), inset: 5pt, code)
 	)[```typ
-	#"hello world!" \
-	#"\"hello\n  world\"!" \
-	#"1 2 3".split() \ <split-example>
-	#"1,2;3".split(regex("[,;]")) \
-	#(regex("\d+") in "ten euros") \
-	#(regex("\d+") in "10 euros")
+  #"hello world!" \
+  #"\"hello\n  world\"!" \
+  #"1 2 3".split() \ <split-example>
+  #"1,2;3".split(regex("[,;]")) \
+  #(regex("\d+") in "ten euros") \
+  #(regex("\d+") in "10 euros")
 	```]
 ]
 
@@ -113,7 +116,7 @@ To reference a line use #cmd[lineref]:
 
 - See #lineref(<split-example>) for an example of the `split()` function.
 
-Long code breaks to new pages and line numbers should (for the most part) still stay aligned. To have listings in figures break, you need to allow it via a #cmd[show] rule:
+Long code breaks to new pages. To have listings in figures break, you need to allow it via a #cmd[show] rule:
 
 ```typ
 #show figure.where(kind: raw): set block(breakable: true)
@@ -124,7 +127,7 @@ Long code breaks to new pages and line numbers should (for the most part) still 
 	#show figure.where(kind: raw): (fig) => [
 		#v(1em)
 		#set align(center)
-		#strong([#fig.supplement #fig.counter.display()]): #emph(fig.caption)
+		#strong([#fig.supplement #fig.counter.display()]): #emph(fig.caption.body)
 		#fig.body
 	]
 
@@ -153,7 +156,7 @@ fn main() {
 	numbering: "I",
 	numbers-style: (lno) => align(right, [#text(eastern, emph(lno)) |]),
 	gutter: 1em,
-  tab-indent: 8,
+  tab-size: 8,
   gobble: 1,
   showlines: true,
 )[
