@@ -112,7 +112,7 @@
   numbers-align: right+horizon,
   numbers-first: 1,
   numbers-step: 1,
-  continue-numbering: false,
+  // continue-numbering: false,
 
   gutter: 10pt,
 
@@ -140,6 +140,7 @@
 
   let line-numbers = numbering != none
   let numbers-format = numbering
+  let continue-numbering = false // TODO: How to implement?
 
   let code-lang = lang
   if lang == auto {
@@ -170,6 +171,11 @@
   // Starting line number
   if numbers-start == auto {
     numbers-start = 1
+    if not continue-numbering {
+      codelst-counter.update(0)
+    }
+  } else {
+    codelst-counter.update(numbers-start - 1)
   }
 
   if not showlines {
@@ -202,18 +208,12 @@
     let code-lines = it.lines.slice(..showrange)
     let line-count = code-lines.len()
 
-    if not continue-numbering {
-      codelst-counter.update(numbers-start - 1)
-    } else {
-      codelst-counter.update(0)
-    }
-
     // Numbering function
     let next-lno() = {
       codelst-counter.step()
       codelst-counter.display((lno) => [
         #if lno >= numbers-first and calc.rem(lno - numbers-first, numbers-step) == 0 [
-          #numbers-style(codelst-numbering(numbering, lno))<line-number>
+          #numbers-style(codelst-numbering(numbering, lno))
         ]
         #if str(lno) in labels { label(labels.at(str(lno))) }
       ])
