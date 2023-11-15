@@ -4,16 +4,10 @@
 
 ## Usage
 
-For Typst 0.6.0 or later, import the package from the typst preview repository:
+Import the package from the typst preview repository:
 
 ```js
 #import "@preview/codelst:1.0.0": sourcecode
-```
-
-For Typst before 0.6.0 or to use **codelst** as a local module, download the package files into your project folder and import `codelst.typ`:
-
-```js
-#import "codelst.typ": sourcecode
 ```
 
 After importing the package, simply wrap any fenced code block in a call to `#sourcecode()`:
@@ -38,7 +32,7 @@ project of the Artos Institute.
 
 ## Further documentation
 
-See `manual.pdf` for a comprehensive manual of the package. 
+See `manual.pdf` for a comprehensive manual of the package.
 
 See `example.typ` for some quick usage examples.
 
@@ -49,6 +43,17 @@ The documentation is created using [Mantys](https://github.com/jneug/typst-manty
 To compile the manual, Mantys needs to be available as a local package. Refer to Mantys' manual for instructions on how to do so.
 
 ## Changelog
+
+### v2.0.0
+
+Version 2 requires Typst 0.9.0 or newer. Rendering is now done using the new
+`raw.line` elements get consistent line numbers and syntax highlighting (even
+if `showrange` is used). Rendering is now done in a `#table`.
+
+- Added `theme` and `syntaxes` options to overwrite passed in `#raw` values.
+- Breaking: Renamed `tab-indend` to `tab-size`, to conform with the Typst option.
+- Breaking: Removed `continue-numbering` option for now. (The feature failed in combination with label parsing and line highlights.)
+- Breaking: Removed styling of line numbers via a `show`-rule.
 
 ### v1.0.0
 
