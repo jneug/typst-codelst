@@ -171,7 +171,7 @@
     let trim-start = code-lines.position((line) => line.trim() != "")
     let trim-end = code-lines.rev().position((line) => line.trim() != "")
     showrange = (showrange.first() + trim-start, showrange.last() - trim-end)
-    code-lines = code-lines.slice(trim-start, -trim-end)
+    code-lines = code-lines.slice(trim-start, code-lines.len() - trim-end)
     numbers-start = numbers-start + trim-start
   }
 
