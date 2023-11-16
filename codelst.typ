@@ -18,7 +18,7 @@
   let gobble = 9223372036854775807
   let _c = none
   for line in code-lines {
-    if line.len() == 0 { continue }
+    if line.trim().len() == 0 { continue }
     if not line.at(0) in (" ", "\t") {
       return 0
     } else {
@@ -27,17 +27,6 @@
     }
   }
   return gobble
-}
-
-// @deprecated
-#let codelst-add-blanks( line, spaces:4, gobble:0 ) = {
-  if gobble in (none, false) { gobble = 0 }
-
-  if line.len() > 0 {
-    line =  line.slice(gobble)
-  }
-
-  return line.replace(regex("^\t+"), (m) => " " * (m.end * spaces))
 }
 
 // Removes whitespace from the start of each line.
@@ -165,7 +154,7 @@
       numbers-start = showrange.first() + 1
     }
   } else {
-    showrange = (0, line-count - 1)
+    showrange = (0, line-count)
   }
 
   // Starting line number
@@ -180,9 +169,9 @@
 
   if not showlines {
     let trim-start = code-lines.position((line) => line.trim() != "")
-    let trim-end   = code-lines.rev().position((line) => line.trim() != "")
-    showrange = (showrange.first() + trim-start, showrange.last() - trim-end + 1)
-    code-lines = code-lines.slice(trim-start, line-count - trim-end)
+    let trim-end = code-lines.rev().position((line) => line.trim() != "")
+    showrange = (showrange.first() + trim-start, showrange.last() - trim-end)
+    code-lines = code-lines.slice(trim-start, -trim-end)
     numbers-start = numbers-start + trim-start
   }
 
@@ -205,7 +194,17 @@
   }
 
   show raw.where(block: true): it => {
-    let code-lines = it.lines.slice(..showrange)
+    let code-lines = it.lines.slice(
+      showrange.first(),
+      calc.min(
+        showrange.last(),
+        it.lines.len()
+      )
+    )
+    // TODO: Somehow one blank line gets removed from the raw text (seems like a bug). This adds them back, if necessary.
+    if showrange.last() > it.lines.len() {
+      code-lines += ("",) * (showrange.last() - it.lines.len())
+    }
     let line-count = code-lines.len()
 
     // Numbering function
@@ -227,10 +226,10 @@
       let numbers-width = numbers-width
       if numbering != none and numbers-width == auto {
         numbers-width = calc.max(
-          ..range(numbers-first - 1, line-count, step:numbers-step).map((lno) => measure(
+          ..{(0pt,) + range(numbers-first - 1, line-count, step:numbers-step).map((lno) => measure(
             numbers-style(codelst-numbering(numbering, lno + numbers-start)),
             styles
-          ).width)
+          ).width)}
         ) + .1em
       }
 
