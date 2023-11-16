@@ -1,4 +1,4 @@
-# codelst (v1.0.0)
+# codelst (v2.0.0)
 
 **codelst** is a [Typst](https://github.com/typst/typst) package for rendering sourcecode with line numbers and some other additions.
 
@@ -7,13 +7,13 @@
 Import the package from the typst preview repository:
 
 ```js
-#import "@preview/codelst:1.0.0": sourcecode
+#import "@preview/codelst:2.0.0": sourcecode
 ```
 
 After importing the package, simply wrap any fenced code block in a call to `#sourcecode()`:
 
 ````js
-#import "@preview/codelst:1.0.0": sourcecode
+#import "@preview/codelst:2.0.0": sourcecode
 
 #sourcecode[```typ
 #show "ArtosFlow": name => box[
