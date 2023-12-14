@@ -168,7 +168,7 @@ project of the Artos Institute.
 ```]
 ````]
 
-CODELST handles whitespace in the code to save space and display the code as intended (and indented). Unnecessary blank lines at the beginning and end will be removed, alongside superfluous indention:
+CODELST handles whitespace in the code to save space and display the code as intended (and indented). Unnecessary blank lines at the beginning and end will be removed, alongside superfluous indentation:
 
 #example[````
 #sourcecode[```java
@@ -623,7 +623,7 @@ Setting up one of these catchall methods is easily done by using the #cmd[codels
   ```]
 ]
 
-= Limiations and alternatvies
+= Limitations and alternatvies
 
 == Limitations and Issues
 
