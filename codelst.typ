@@ -35,7 +35,7 @@
     gobble = codelst-gobble-count(code-lines)
   }
 
-  // Convert tabs to spaces and remove unecessary whitespace
+  // Convert tabs to spaces and remove unnecessary whitespace
   return code-lines.map((line) => {
     if line.len() > 0 {
       line = line.slice(gobble)

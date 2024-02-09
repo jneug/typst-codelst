@@ -27,7 +27,7 @@ This report is embedded in the ArtosFlow project. ArtosFlow is a project of the 
 
 /*
  Very long line without linebreak
- with a preceeding block comment
+ with a preceding block comment
 */
 This_report_is_embedded_in_the_ArtosFlow_project._ArtosFlow_is_a_project_of_the_Artos_Institute.
 
