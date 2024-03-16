@@ -210,7 +210,7 @@
     // Numbering function
     let next-lno() = {
       codelst-counter.step()
-      codelst-counter.display((lno) => [
+      context codelst-counter.display((lno) => [
         #if lno >= numbers-first and calc.rem(lno - numbers-first, numbers-step) == 0 [
           #numbers-style(codelst-numbering(numbering, lno))
         ]
@@ -237,18 +237,17 @@
         columns: if numbering == none {
           (1fr,)
         } else if numbers-side != right {
-          (numbers-width, 1fr)
+          (numbers-width, gutter, 1fr)
         } else {
-          (1fr, numbers-width)
+          (1fr, gutter, numbers-width)
         },
-        column-gutter: gutter,
+        column-gutter: 0pt,
         row-gutter: 0pt,
 
         stroke:none,
         inset: (x: 0pt, y: .25em),
 
         fill: (c, r) => {
-          r = calc.quo(r, 2) // Fix for column / row numbers counting gutters
           if r + numbers-start in highlighted {
             highlight-color
           } else {
@@ -256,9 +255,8 @@
           }
         },
         align: (c, r) => {
-          // c = calc.quo(c, 2)
           if numbering != none {
-            if numbers-side != right and c == 0 or (numbers-side == right and c == 1) {
+            if numbers-side != right and c == 0 or (numbers-side == right and c == 2) {
               return numbers-align
             }
           }
@@ -268,9 +266,9 @@
         ..if numbering == none {
           code-lines
         } else if numbers-side != right {
-          code-lines.map((l) => (next-lno(), l)).flatten()
+          code-lines.map((l) => (next-lno(), none, l)).flatten()
         } else {
-          code-lines.map((l) => (l, next-lno())).flatten()
+          code-lines.map((l) => (l, none, next-lno())).flatten()
         }
       )
     })
@@ -321,7 +319,7 @@
 #let lineref( label, supplement:"line" ) = locate(loc => {
   let lines = query(selector(label), loc)
   assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
-  [#supplement #numbering("1", ..codelst-counter.at(lines.first().location()))]
+  [#supplement #numbering("1", ..context codelst-counter.at(lines.first().location()))]
 })
 
 #let codelst-styles( body ) = {
