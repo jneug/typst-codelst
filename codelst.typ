@@ -319,7 +319,7 @@
 #let lineref( label, supplement:"line" ) = locate(loc => {
   let lines = query(selector(label), loc)
   assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
-  [#supplement #numbering("1", ..context codelst-counter.at(lines.first().location()))]
+  [#supplement #{context numbering("1", ..codelst-counter.at(lines.first().location()))}]
 })
 
 #let codelst-styles( body ) = {
