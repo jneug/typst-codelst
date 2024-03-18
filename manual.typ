@@ -1,4 +1,4 @@
-#import "@local/mantys:0.0.3": *
+#import "@local/mantys:0.1.0": *
 
 #import "codelst.typ"
 
@@ -580,7 +580,7 @@ Setting up one of these catchall methods is easily done by using the #cmd[codels
       See line 2 for a main method in Java.
   ]
 
-  How to set labels for lines, refer to the documentation of #arg[label-regex] at #refcmd("sourcecode").
+  How to set labels for lines, refer to the documentation of #arg[label-regex] at #cmdref("sourcecode").
 ]
 
 #command("code-frame", ..args(
