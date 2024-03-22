@@ -1,4 +1,4 @@
-#import "@local/mantys:0.1.0": *
+#import "@local/mantys:0.1.1": *
 
 #import "codelst.typ"
 
