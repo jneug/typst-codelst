@@ -198,6 +198,24 @@ This behavior can be disabled or modified:
 ```]
 ````]
 
+To adjust the font, you can customize the #cmd-[raw.line] element function:
+
+#example[````
+#show raw.line: it => text(
+	font: "Comic Sans MS",
+	weight: 600,
+	size: 18pt,
+	it
+)
+#sourcecode[```cpp
+import std;
+int main() {
+  std::println("Hello, World!");
+  return 0;
+}
+```]
+````]
+
 To show code from a file, load it with #cmd[read] and pass the result to #cmd[sourcefile] alongside the filename:
 
 #example(raw("#sourcefile(read(\"typst.toml\"), file:\"typst.toml\")"))[
