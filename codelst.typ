@@ -218,7 +218,7 @@
       ])
     }
 
-    let code-table = style(styles => {
+    let code-table = context {
       // Measure the maximum width of the line numbers
       // We need to measure every line, since the numbers
       // are styled and could have unexpected formatting
@@ -227,8 +227,7 @@
       if numbering != none and numbers-width == auto {
         numbers-width = calc.max(
           ..{(0pt,) + range(numbers-first - 1, line-count, step:numbers-step).map((lno) => measure(
-            numbers-style(codelst-numbering(numbering, lno + numbers-start)),
-            styles
+            numbers-style(codelst-numbering(numbering, lno + numbers-start))
           ).width)}
         ) + .1em
       }
@@ -271,7 +270,7 @@
           code-lines.map((l) => (l, none, next-lno())).flatten()
         }
       )
-    })
+    }
 
     frame[
       #set align(start)
@@ -316,11 +315,11 @@
   sourcecode( ..args, raw(code, lang:lang, block:true))
 }
 
-#let lineref( label, supplement:"line" ) = locate(loc => {
-  let lines = query(selector(label), loc)
+#let lineref( label, supplement:"line" ) = context {
+  let lines = query(selector(label))
   assert.ne(lines, (), message: "Label <" + str(label) + "> does not exists.")
   [#supplement #{context numbering("1", ..codelst-counter.at(lines.first().location()))}]
-})
+}
 
 #let codelst-styles( body ) = {
   show figure.where(kind: raw): set block(breakable: true)
