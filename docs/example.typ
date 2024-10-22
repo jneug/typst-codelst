@@ -76,7 +76,7 @@ Sourcecode can be loaded from a file and passed to #cmd[sourcefile]. Any #codels
       numbers-side: right,
       numbers-style: number-format,
       file: filename,
-      read(filename),
+      read("../" + filename),
     ),
   )<lst-sourcefile>
 ]

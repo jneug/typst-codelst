@@ -201,7 +201,7 @@ This behavior can be disabled or modified:
 To show code from a file, load it with #cmd[read] and pass the result to #cmd[sourcefile] alongside the filename:
 
 #example(raw("#sourcefile(read(\"typst.toml\"), file:\"typst.toml\")"))[
-  #codelst.sourcefile(read("typst.toml"), file: "typst.toml")
+  #codelst.sourcefile(read("../typst.toml"), file: "typst.toml")
 ]
 
 It is useful to define an alias for #cmd-[sourcefile]:
@@ -223,7 +223,7 @@ It is useful to define an alias for #cmd-[sourcefile]:
   ```][
   #codelst.sourcefile(
     showrange: (2, 4),
-    read("typst.toml"),
+    read("../typst.toml"),
     file: "typst.toml",
   )
 ]
@@ -239,7 +239,7 @@ Specific lines can be highlighted:
   ```][
   #codelst.sourcefile(
     highlighted: (2, 3, 4, 8, 9),
-    read("typst.toml"),
+    read("../typst.toml"),
     file: "typst.toml",
   )
 ]
@@ -262,7 +262,7 @@ To reference a line from other parts of the document, CODELST looks for labels i
     label-regex: regex("\"(codelst.typ)\""),
     highlight-labels: true,
     highlight-color: lime,
-    read("typst.toml"),
+    read("../typst.toml"),
     file: "typst.toml",
   )
 
@@ -539,7 +539,7 @@ Setting up one of these catchall methods is easily done by using the #cmd[codels
   Any other #arg[args] will be passed to #cmd-[sourcecode].
 
   #example(raw("#sourcefile(read(\"typst.toml\"), file:\"typst.toml\")"))[
-    #codelst.sourcefile(read("typst.toml"), lang: "toml")
+    #codelst.sourcefile(read("../typst.toml"), lang: "toml")
   ]
 
   #ibox[
