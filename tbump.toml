@@ -31,13 +31,13 @@ src = "README.md"
 search = "codelst:{current_version}"
 
 [[file]]
-src = "manual.typ"
+src = "docs/manual.typ"
 search = 'version:\s*"{current_version}",'
 [[file]]
-src = "manual.typ"
+src = "docs/manual.typ"
 search = 'codelst:{current_version}'
 [[file]]
-src = "manual.typ"
+src = "docs/manual.typ"
 search = 'codelst-{current_version}'
 
 [[before_commit]]
