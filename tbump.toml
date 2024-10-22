@@ -42,8 +42,8 @@ search = 'codelst-{current_version}'
 
 [[before_commit]]
 name = "compile manual"
-cmd = "typst compile manual.typ"
+cmd = "typst compile --root . docs/manual.typ"
 [[before_commit]]
 name = "compile examples"
-cmd = "typst compile example.typ"
+cmd = "typst compile --root . docs/example.typ"
 
