@@ -8,7 +8,7 @@
   subtitle: [A *Typst* package to render source code],
   authors: "Jonas Neugebauer",
   url: "https://github.com/jneug/typst-codelst",
-  version: "2.0.1",
+  version: "2.0.2",
   date: "2023-07-19",
   abstract: [
     #package[codelst] is a *Typst* package inspired by LaTeX packages like #package[listings]. It adds functionality to render source code with line numbers, highlighted lines and more.
@@ -44,7 +44,7 @@ See `example.typ`/`example.pdf` for some quick examples how to use CODELST.
 
 For Typst 0.9.0 and later, CODELST can be imported from the preview repository:
 #sourcecode(numbering: none)[```typ
-  #import "@preview/codelst:2.0.1": sourcecode
+  #import "@preview/codelst:2.0.2": sourcecode
   ```]
 
 Alternatively, the package can be downloaded and saved into the system dependent local package repository.
@@ -52,14 +52,14 @@ Alternatively, the package can be downloaded and saved into the system dependent
 Either download the current release from GitHub#footnote[#link("https://github.com/jneug/typst-codelst/releases/latest")] and unpack the archive into your system dependent local repository folder#footnote[#link("https://github.com/typst/packages#local-packages")] or clone it directly:
 #codesnippet[
   ```shell-unix-generic
-  git clone https://github.com/jneug/typst-codelst.git codelst-2.0.1
+  git clone https://github.com/jneug/typst-codelst.git codelst-2.0.2
   ```]
 
-In either case, make sure the files are placed in a folder with the correct version number: `codelst-2.0.1`
+In either case, make sure the files are placed in a folder with the correct version number: `codelst-2.0.2`
 
 After installing the package, just import it inside your `typ` file:
 #codesnippet[```typ
-  #import "@local/codelst:2.0.1": sourcecode
+  #import "@local/codelst:2.0.2": sourcecode
   ```]
 
 == Use as a module
